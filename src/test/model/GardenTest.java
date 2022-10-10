@@ -18,7 +18,7 @@ class GardenTest {
     }
 
     @Test
-    public void addPlantTestSingular() {
+    public void testAddPlantSingular() {
         ArrayList<Plant> listOfPlants = new ArrayList<Plant>();
         listOfPlants.add(plant);
         testGarden.addPlant(plant);
@@ -26,7 +26,7 @@ class GardenTest {
     }
 
     @Test
-    public void addPlantTestMultiple() {
+    public void testAddPlantMultiple() {
         Plant plant = new Plant("Poppy", "F");
         Plant plantTwo = new Plant("Alexander", "F");
         Plant plantThree = new Plant("Lily", "F");
@@ -46,7 +46,7 @@ class GardenTest {
     }
 
     @Test
-    public void removePlantTestBasic() {
+    public void testRemovePlantBasic() {
         Plant plantTwo = new Plant("Evergreen", "F+A");
         testGarden.addPlant(plant);
         testGarden.addPlant(plantTwo);
@@ -59,7 +59,7 @@ class GardenTest {
     }
 
     @Test
-    public void removePlantTestSingular() {
+    public void testRemovePlantSingular() {
         testGarden.addPlant(plant);
         assertEquals(1, testGarden.getListOfPlants().size());
         assertEquals(plant, testGarden.getListOfPlants().get(0));
@@ -68,7 +68,7 @@ class GardenTest {
     }
 
     @Test
-    public void removePlantTestOneFromMultiple() {
+    public void testRemovePlantOneFromMultiple() {
         Plant plantTwo = new Plant("Alexander", "F");
         Plant plantThree = new Plant("Lily", "F");
         testGarden.addPlant(plant);
@@ -85,7 +85,7 @@ class GardenTest {
     }
 
     @Test
-    public void removePlantTestMultipleFromMultiple() {
+    public void testRemovePlantMultipleFromMultiple() {
         Plant plantTwo = new Plant("Alexander", "F");
         Plant plantThree = new Plant("Lily", "F");
         Plant plantFour = new Plant("Poppy", "F");
@@ -110,7 +110,7 @@ class GardenTest {
     }
 
     @Test
-    public void waterPlantTestSingularName() {
+    public void testWaterPlantSingularName() {
         plant.setThirst(5);
         testGarden.addPlant(plant);
         assertEquals(1, testGarden.getListOfPlants().size());
@@ -120,7 +120,7 @@ class GardenTest {
     }
 
     @Test
-    public void waterPlantTestMultiple() {
+    public void testWaterPlantMultiple() {
         Plant plantTwo = new Plant("Candice", "FF");
         Plant plantThree = new Plant("Charlie", "F+");
         testGarden.addPlant(plant);
@@ -143,24 +143,24 @@ class GardenTest {
     }
 
     @Test
-    public void nameInGardenTestEmpty() {
+    public void testNameInGardenEmpty() {
         assertFalse(testGarden.nameInGarden("Charlie"));
     }
 
     @Test
-    public void nameInGardenTestTrueSingular() {
+    public void testNameInGardenTrueSingular() {
         testGarden.addPlant(plant);
         assertTrue(testGarden.nameInGarden("Poppy"));
     }
 
     @Test
-    public void nameInGardenTestFalseSingular() {
+    public void testNameInGardenFalseSingular() {
         testGarden.addPlant(plant);
         assertFalse(testGarden.nameInGarden("Popp"));
     }
 
     @Test
-    public void nameInGardenTestMultiple() {
+    public void testNameInGardenMultiple() {
         Plant plantTwo = new Plant("Gogo", "F+F");
         Plant plantThree = new Plant("Bobo", "F--");
         testGarden.addPlant(plant);
