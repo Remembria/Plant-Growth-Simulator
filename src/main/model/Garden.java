@@ -67,7 +67,6 @@ public class Garden {
         return nameList.indexOf(name);
     }
 
-    // EFFECTS: Returns the list of plants in the garden
     public ArrayList<Plant> getListOfPlants() {
         return listOfPlants;
     }

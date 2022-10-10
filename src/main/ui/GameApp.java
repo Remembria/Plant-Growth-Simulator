@@ -48,6 +48,7 @@ public class GameApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: Updates the status of every plant in the garden over time
     private void update(long elapsedTimeNS) {
         double elapsedTime = elapsedTimeNS / Math.pow(10, 9);
@@ -162,6 +163,7 @@ public class GameApp {
         System.out.println("{F, +, -, [, ]} \n" + "Additionally, each start brace [ has its own end brace ]");
     }
 
+    // MODIFIES: this
     // EFFECTS: Adds a plant to the mainGarden and prints an addition message
     public void addPlant(String name, String seed) {
         System.out.println("Perfect! " + name + " has been added to the garden.");
