@@ -38,6 +38,11 @@ class GardenTest {
         testGarden.addPlant(plantTwo);
         testGarden.addPlant(plantThree);
         assertEquals(listOfPlants, testGarden.getListOfPlants());
+        Plant plantFour = new Plant("Pretzel", "F-F-F");
+        testGarden.addPlant(plantFour);
+        listOfPlants.add(plantFour);
+        assertEquals(listOfPlants, testGarden.getListOfPlants());
+
     }
 
     @Test
@@ -104,5 +109,65 @@ class GardenTest {
         assertEquals(plantFive, testGarden.getListOfPlants().get(3));
     }
 
+    @Test
+    public void waterPlantTestSingularName() {
+        plant.setThirst(5);
+        testGarden.addPlant(plant);
+        assertEquals(1, testGarden.getListOfPlants().size());
+        assertEquals(plant, testGarden.getListOfPlants().get(0));
+        testGarden.waterPlant("Poppy");
+        assertEquals(4, plant.getThirst());
+    }
+
+    @Test
+    public void waterPlantTestMultiple() {
+        Plant plantTwo = new Plant("Candice", "FF");
+        Plant plantThree = new Plant("Charlie", "F+");
+        testGarden.addPlant(plant);
+        testGarden.addPlant(plantTwo);
+        testGarden.addPlant(plantThree);
+        plant.setThirst(5);
+        plantTwo.setThirst(9);
+        plantThree.setThirst(0);
+        assertEquals(3, testGarden.getListOfPlants().size());
+        assertEquals(plant, testGarden.getListOfPlants().get(0));
+        assertEquals(plantTwo, testGarden.getListOfPlants().get(1));
+        assertEquals(plantThree, testGarden.getListOfPlants().get(2));
+        testGarden.waterPlant("Poppy");
+        testGarden.waterPlant("Poppy");
+        testGarden.waterPlant("Charlie");
+        testGarden.waterPlant("Candice");
+        assertEquals(3, plant.getThirst());
+        assertEquals(8, plantTwo.getThirst());
+        assertEquals(0, plantThree.getThirst());
+    }
+
+    @Test
+    public void nameInGardenTestEmpty() {
+        assertFalse(testGarden.nameInGarden("Charlie"));
+    }
+
+    @Test
+    public void nameInGardenTestTrueSingular() {
+        testGarden.addPlant(plant);
+        assertTrue(testGarden.nameInGarden("Poppy"));
+    }
+
+    @Test
+    public void nameInGardenTestFalseSingular() {
+        testGarden.addPlant(plant);
+        assertFalse(testGarden.nameInGarden("Popp"));
+    }
+
+    @Test
+    public void nameInGardenTestMultiple() {
+        Plant plantTwo = new Plant("Gogo", "F+F");
+        Plant plantThree = new Plant("Bobo", "F--");
+        testGarden.addPlant(plant);
+        testGarden.addPlant(plantTwo);
+        testGarden.addPlant(plantThree);
+        assertTrue(testGarden.nameInGarden("Bobo"));
+        assertFalse(testGarden.nameInGarden("Baba"));
+    }
 
 }

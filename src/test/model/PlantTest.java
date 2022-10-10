@@ -31,7 +31,7 @@ public class PlantTest {
 
     @Test
     public void testWaterBoundaryCase() {
-        plant.setThirst((float) 0.5);
+        plant.setThirst((float) 0.9);
         plant.water();
         assertEquals(0, plant.getThirst());
     }
@@ -50,6 +50,32 @@ public class PlantTest {
                     "[-FF-[-F+F+F]+[+F-F-F]+FF-[-F+F+F]+[+F-F-F]+FF-" +
                     "[-F+F+F]+[+F-F-F]]+[+FF-[-F+F+F]+[+F-F-F]-FF-" +
                     "[-F+F+F]+[+F-F-F]-FF-[-F+F+F]+[+F-F-F]]", plant.getLindenString());
+    }
+
+    @Test
+    public void testHealth() {
+        plant.setThirst(0);
+        assertEquals("Freshly Watered!!", plant.health());
+        plant.setThirst(1);
+        assertEquals("Freshly Watered!!", plant.health());
+        plant.setThirst(2);
+        assertEquals("Healthy", plant.health());
+        plant.setThirst(3);
+        assertEquals("Healthy", plant.health());
+        plant.setThirst(4);
+        assertEquals("Thirsty...", plant.health());
+        plant.setThirst(5);
+        assertEquals("Thirsty...", plant.health());
+        plant.setThirst(6);
+        assertEquals("Thirsty...", plant.health());
+        plant.setThirst(7);
+        assertEquals("VERY THIRSTY", plant.health());
+        plant.setThirst(8);
+        assertEquals("VERY THIRSTY", plant.health());
+        plant.setThirst(9);
+        assertEquals("VERY THIRSTY", plant.health());
+        plant.setThirst(10);
+        assertEquals("S.O.S.", plant.health());
     }
 
 

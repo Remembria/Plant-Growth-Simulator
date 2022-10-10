@@ -19,12 +19,7 @@ public class Garden {
     // MODIFIES: this
     // EFFECTS: Adds another plant to the garden at the end of listOfPlants
     public void addPlant(Plant plant) {
-        //ArrayList<String> nameList = (ArrayList<String>) this.listOfPlants.stream().map(p -> p.getName());
-        //if (nameList.contains(plant.getName())) {
-        //    nameAlreadyInList(plant.getName());
-        //} else {
         listOfPlants.add(plant);
-        //}
     }
 
     // REQUIRES: listOfPlants must not be empty
@@ -34,35 +29,43 @@ public class Garden {
         listOfPlants.remove(listOfPlants.size() - 1);
     }
 
+    // REQUIRES: listOfPlants must have a plant with name plantName
     // MODIFIES: this
     // EFFECTS: Removes the plant instance with name plantName from the listOfPlants
     public void removePlant(String plantName) {
-        ArrayList<String> nameList = (ArrayList<String>)
-                                        listOfPlants.stream().map(Plant::getName).collect(Collectors.toList());
-        for (int i = 0; i < nameList.size(); i++) {
-            if (plantName.equals(nameList.get(i))) {
-                listOfPlants.remove(i);
-                break;
-            }
-        }
-        /*
-        ArrayList<Integer> indicesToPop = new ArrayList<Integer>();
-        int index = 0;
-        for (Plant p : listOfPlants) {
-            if (p.getName() == plantName) {
-                indicesToPop.add(index);
-            }
-            index++;
-        }
-        for (Integer i : indicesToPop) {
-            listOfPlants.remove(i);
-        }
-         */
+        listOfPlants.remove(indexOfNameInGarden(plantName));
+        //ArrayList<String> nameList = (ArrayList<String>)
+        //                                listOfPlants.stream().map(Plant::getName).collect(Collectors.toList());
+        //for (int i = 0; i < nameList.size(); i++) {
+        //    if (plantName.equals(nameList.get(i))) {
+        //        listOfPlants.remove(i);
+        //        break;
+        //    }
+        //}
     }
 
-    //private void nameAlreadyInList(String name) {
-    //    System.out.println("You've already named a plant " + name + ". Try a new name this time.");
-    //}
+    // REQUIRES: listOfPlants must have a plant with name plantName
+    // MODIFIES: this
+    // EFFECTS: Waters the named plant
+    public void waterPlant(String name) {
+        Plant plant = listOfPlants.get(indexOfNameInGarden(name));
+        plant.water();
+    }
+
+    // EFFECTS: Returns true if the given plant name is within the garden
+    public Boolean nameInGarden(String name) {
+        ArrayList<String> nameList = (ArrayList<String>)
+                getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList());
+        return nameList.contains(name);
+    }
+
+    // REQUIRES: listOfPlants must have a plant with name plantName
+    // EFFECTS: Returns the index of where the given plant name is within the garden
+    private int indexOfNameInGarden(String name) {
+        ArrayList<String> nameList = (ArrayList<String>)
+                getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList());
+        return nameList.indexOf(name);
+    }
 
     // EFFECTS: Returns the list of plants in the garden
     public ArrayList<Plant> getListOfPlants() {
