@@ -47,4 +47,5 @@ public abstract class LindenmayerSystem {
         grammarPredecessors.add(p);
         grammarSuccessors.add(s);
     }
+
 }

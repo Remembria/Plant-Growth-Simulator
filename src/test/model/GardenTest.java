@@ -169,5 +169,4 @@ class GardenTest {
         assertTrue(testGarden.nameInGarden("Bobo"));
         assertFalse(testGarden.nameInGarden("Baba"));
     }
-
 }

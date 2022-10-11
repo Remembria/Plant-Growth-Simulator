@@ -33,7 +33,7 @@ public class Plant extends LindenmayerSystem {
     // MODIFIES: this
     // EFFECTS: Decreases the value of thirst by 1
     public void water() {
-        thirst = Math.max((thirst - 1), 0);
+        setThirst(Math.max((thirst - 1), 0));
     }
 
     // REQUIRES: 0 <= thirst <= 10
@@ -54,10 +54,6 @@ public class Plant extends LindenmayerSystem {
 
     public void setThirst(float t) {
         thirst = t;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setProgressToGrow(float v) {

@@ -20,6 +20,7 @@ public class PlantTest {
     public void testPlant() {
         assertEquals("Gerald", plant.getName());
         assertEquals("F", plant.getLindenString());
+        assertEquals(0, plant.getThirst());
     }
 
     @Test
@@ -78,5 +79,24 @@ public class PlantTest {
         assertEquals("S.O.S.", plant.health());
     }
 
+    @Test
+    public void testGrowTooThirsty() {
+        plant.setThirst(6);
+        plant.grow();
+        assertEquals("F", plant.getLindenString());
+    }
 
+    @Test
+    public void testGrowJustEnoughThirst() {
+        plant.setThirst(5);
+        plant.grow();
+        assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
+    }
+
+    @Test
+    public void testGrowBelowThirstBelow() {
+        plant.setThirst(4);
+        plant.grow();
+        assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
+    }
 }
