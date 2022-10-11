@@ -22,14 +22,6 @@ public class Plant extends LindenmayerSystem {
         super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
     }
 
-    // MODIFIES: this
-    // EFFECTS: Grows the plant given a certain elapsedTime has passed
-    //public void grow() {
-    //    if (thirst <= 5) {
-    //        super.updateLindenSystem();
-    //    }
-    //}
-
     // REQUIRES: gameSpeed != 0 (or else no growth will ever occur)
     // MODIFIES: this
     // EFFECTS: Grows the plant given a certain elapsedTime has passed at a given rate

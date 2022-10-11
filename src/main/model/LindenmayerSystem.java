@@ -35,14 +35,6 @@ public abstract class LindenmayerSystem {
         return lindenString;
     }
 
-    public List<String> getGrammarPredecessors() {
-        return grammarPredecessors;
-    }
-
-    public List<String> getGrammarSuccessors() {
-        return grammarSuccessors;
-    }
-
     public void setPredecessorsAndSuccessors(String p, String s) {
         grammarPredecessors.add(p);
         grammarSuccessors.add(s);
