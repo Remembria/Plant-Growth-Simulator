@@ -17,18 +17,33 @@ public class Plant extends LindenmayerSystem {
     public Plant(String name, String axiom) {
         this.name = name;
         super.lindenString = axiom;
-        growthRate = (int) Math.max(10, (Math.round(Math.random() * 100)));
+        growthRate = (int) Math.max(1, (Math.round(Math.random() * 10)));
         progressToGrow = growthRate;
         super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
     }
 
     // MODIFIES: this
-    // EFFECTS: If the plant is healthy, updates its linden system to grow new branches
-    public void grow() {
-        if (thirst <= 5) {
-            super.updateLindenSystem();
+    // EFFECTS: Grows the plant given a certain elapsedTime has passed
+    //public void grow() {
+    //    if (thirst <= 5) {
+    //        super.updateLindenSystem();
+    //    }
+    //}
+
+    // REQUIRES: gameSpeed != 0 (or else no growth will ever occur)
+    // MODIFIES: this
+    // EFFECTS: Grows the plant given a certain elapsedTime has passed at a given rate
+    public void grow(double elapsedTime, float gameSpeed) { //gameSpeed at regular rate is 0.05
+        setProgressToGrow(getProgressToGrow() - ((float) elapsedTime * gameSpeed));
+        if (getProgressToGrow() <= 0) {
+            setProgressToGrow(growthRate);
+            if (thirst <= 5) {
+                super.updateLindenSystem();
+            }
         }
+        setThirst((float) (getThirst() + (elapsedTime * gameSpeed)));
     }
+
 
     // MODIFIES: this
     // EFFECTS: Decreases the value of thirst by 1

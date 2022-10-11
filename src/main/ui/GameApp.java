@@ -54,19 +54,14 @@ public class GameApp {
         double elapsedTime = elapsedTimeNS / Math.pow(10, 9);
         ArrayList<String> plantsToRemove = new ArrayList<String>();
         for (Plant p : mainGarden.getListOfPlants()) {
-            p.setThirst((float) (p.getThirst() + (elapsedTime * 0.05)));
-            p.setProgressToGrow(p.getProgressToGrow() - (float) elapsedTime);
+            p.grow(elapsedTime, (float) 0.1);
             if (p.getThirst() > 10) {
                 plantsToRemove.add(p.getName());
-            }
-            if (p.getProgressToGrow() < 0) {
-                p.setProgressToGrow(p.growthRate);
-                p.grow();
             }
         }
         for (String p : plantsToRemove) {
             mainGarden.removePlant(p);
-            System.out.println(p + " Has died from lack of water :(");
+            System.out.println("\n" + p + " Has died from lack of water :(\n");
         }
     }
 
@@ -180,7 +175,7 @@ public class GameApp {
                 System.out.println("\n" + p.getName());
                 System.out.println("\tShape: " + p.getLindenString());
                 System.out.println("\tHealth: " + p.health());
-                System.out.println("\tGrows every " + p.growthRate + " seconds");
+                System.out.println("\tGrows every " + p.growthRate + " moons");
                 System.out.println("\n");
             }
         }

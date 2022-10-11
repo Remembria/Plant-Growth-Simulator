@@ -38,22 +38,6 @@ public class PlantTest {
     }
 
     @Test
-    public void testPlantUpdateLindenSystemSingular() {
-        plant.grow();
-        assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
-    }
-
-    @Test
-    public void testPlantUpdateLindenSystemMany() {
-        plant.grow();
-        plant.grow();
-        assertEquals("FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]-" +
-                    "[-FF-[-F+F+F]+[+F-F-F]+FF-[-F+F+F]+[+F-F-F]+FF-" +
-                    "[-F+F+F]+[+F-F-F]]+[+FF-[-F+F+F]+[+F-F-F]-FF-" +
-                    "[-F+F+F]+[+F-F-F]-FF-[-F+F+F]+[+F-F-F]]", plant.getLindenString());
-    }
-
-    @Test
     public void testHealth() {
         plant.setThirst(0);
         assertEquals("Freshly Watered!!", plant.health());
@@ -80,23 +64,60 @@ public class PlantTest {
     }
 
     @Test
-    public void testGrowTooThirsty() {
+    public void testGrowTooThirstyCanUpdate() {
         plant.setThirst(6);
-        plant.grow();
+        plant.setProgressToGrow(0);
+        plant.grow(1, 1);
         assertEquals("F", plant.getLindenString());
+        assertEquals(7, plant.getThirst());
+        assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
     @Test
-    public void testGrowJustEnoughThirst() {
+    public void testGrowJustEnoughThirstJustEnoughUpdate() {
         plant.setThirst(5);
-        plant.grow();
+        plant.setProgressToGrow(1);
+        plant.grow(1, 1);
         assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
+        assertEquals(6, plant.getThirst());
+        assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
     @Test
-    public void testGrowBelowThirstBelow() {
-        plant.setThirst(4);
-        plant.grow();
+    public void testGrowthNotThirstyNoUpdate() {
+        plant.setThirst(0);
+        plant.setProgressToGrow((float) 2.1);
+        plant.grow(2, 1);
+        assertEquals("F", plant.getLindenString());
+        assertEquals(2, plant.getThirst());
+        assertEquals(((float) 2.1) - ((float) 2 * 1), plant.getProgressToGrow());
+    }
+
+    @Test
+    public void testPlantGrowDifferentGameSpeed() {
+        plant.setThirst(3);
+        plant.setProgressToGrow((float) 6);
+        plant.grow(2, 3);
         assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
+        assertEquals(9, plant.getThirst());
+        assertEquals(plant.growthRate, plant.getProgressToGrow());
+    }
+
+    @Test
+    public void testPlantUpdateLindenSystemMany() {
+        plant.setThirst(0);
+        plant.setProgressToGrow(0);
+        plant.grow(1, 1);
+        assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
+        assertEquals(1, plant.getThirst());
+        assertEquals(plant.growthRate, plant.getProgressToGrow());
+        plant.setProgressToGrow(1);
+        plant.grow(1, 1);
+        assertEquals("FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]-" +
+                "[-FF-[-F+F+F]+[+F-F-F]+FF-[-F+F+F]+[+F-F-F]+FF-" +
+                "[-F+F+F]+[+F-F-F]]+[+FF-[-F+F+F]+[+F-F-F]-FF-" +
+                "[-F+F+F]+[+F-F-F]-FF-[-F+F+F]+[+F-F-F]]", plant.getLindenString());
+        assertEquals(2, plant.getThirst());
+        assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 }
