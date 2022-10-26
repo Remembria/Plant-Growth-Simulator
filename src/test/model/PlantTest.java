@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.ImpossibleThirstException;
+import exceptions.InvalidSeedAlphabetException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +14,11 @@ public class PlantTest {
 
     @BeforeEach
     public void setup() {
-        plant = new Plant("Gerald", "F");
+        try {
+            plant = new Plant("Gerald", "F");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("Invalid Seed Given");
+        }
     }
 
 
@@ -24,43 +30,84 @@ public class PlantTest {
     }
 
     @Test
+    public void testPlantInvalidSeedAlphabetException() {
+        Plant plantTwo;
+        try {
+            plantTwo = new Plant("Jerome", "FFa");
+            fail("No exception caught");
+        } catch (InvalidSeedAlphabetException e) {
+            //Perfect
+        }
+    }
+
+    @Test
     public void testWaterMiddleCase() {
         plant.setThirst(5);
-        plant.water();
+        plant.water(1);
         assertEquals(4, plant.getThirst());
     }
 
     @Test
     public void testWaterBoundaryCase() {
         plant.setThirst((float) 0.9);
-        plant.water();
+        plant.water(1);
         assertEquals(0, plant.getThirst());
     }
 
     @Test
-    public void testHealth() {
-        plant.setThirst(0);
-        assertEquals("Freshly Watered!!", plant.health());
-        plant.setThirst(1);
-        assertEquals("Freshly Watered!!", plant.health());
-        plant.setThirst(2);
-        assertEquals("Healthy", plant.health());
-        plant.setThirst(3);
-        assertEquals("Healthy", plant.health());
-        plant.setThirst(4);
-        assertEquals("Thirsty...", plant.health());
-        plant.setThirst(5);
-        assertEquals("Thirsty...", plant.health());
-        plant.setThirst(6);
-        assertEquals("Thirsty...", plant.health());
-        plant.setThirst(7);
-        assertEquals("VERY THIRSTY", plant.health());
-        plant.setThirst(8);
-        assertEquals("VERY THIRSTY", plant.health());
-        plant.setThirst(9);
-        assertEquals("VERY THIRSTY", plant.health());
-        plant.setThirst(10);
-        assertEquals("S.O.S.", plant.health());
+    public void testHealthNoExceptions() {
+        try {
+            plant.setThirst(-1);
+            assertEquals("Too much water...", plant.health());
+            plant.setThirst(0);
+            assertEquals("Perfectly Watered", plant.health());
+            plant.setThirst(1);
+            assertEquals("Freshly Watered!!", plant.health());
+            plant.setThirst(2);
+            assertEquals("Healthy", plant.health());
+            plant.setThirst(3);
+            assertEquals("Healthy", plant.health());
+            plant.setThirst(4);
+            assertEquals("Thirsty...", plant.health());
+            plant.setThirst(5);
+            assertEquals("Thirsty...", plant.health());
+            plant.setThirst(6);
+            assertEquals("Thirsty...", plant.health());
+            plant.setThirst(7);
+            assertEquals("VERY THIRSTY", plant.health());
+            plant.setThirst(8);
+            assertEquals("VERY THIRSTY", plant.health());
+            plant.setThirst(9);
+            assertEquals("VERY THIRSTY", plant.health());
+            plant.setThirst(10);
+            assertEquals("S.O.S.", plant.health());
+        } catch (ImpossibleThirstException e) {
+            fail("No thirst exception expected");
+        }
+    }
+
+    @Test
+    public void testHealthBelowRange() {
+        plant.setThirst(-2);
+        try {
+            plant.health();
+            fail("No exception given");
+        } catch (ImpossibleThirstException e) {
+            //Perfect
+        }
+        assertEquals(-2, plant.getThirst());
+    }
+
+    @Test
+    public void testHealthAboveRange() {
+        plant.setThirst(11);
+        try {
+            plant.health();
+            fail("No exception given");
+        } catch (ImpossibleThirstException e) {
+            //Perfect
+        }
+        assertEquals(11, plant.getThirst());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.*;
 import model.Garden;
 import model.Plant;
 
@@ -52,16 +53,28 @@ public class GameApp {
     // EFFECTS: Updates the status of every plant in the garden over time
     private void update(long elapsedTimeNS) {
         double elapsedTime = elapsedTimeNS / Math.pow(10, 9);
-        ArrayList<String> plantsToRemove = new ArrayList<String>();
+        ArrayList<String> diedOfThirst = new ArrayList<String>();
+        ArrayList<String> diedOfWater = new ArrayList<String>();
         for (Plant p : mainGarden.getListOfPlants()) {
             p.grow(elapsedTime, (float) 0.1);
             if (p.getThirst() > 10) {
-                plantsToRemove.add(p.getName());
+                diedOfThirst.add(p.getName());
+            } else if (p.getThirst() < -1) {
+                diedOfWater.add(p.getName());
             }
         }
-        for (String p : plantsToRemove) {
-            mainGarden.removePlant(p);
-            System.out.println("\n" + p + " Has died from lack of water :(\n");
+        killPlants(diedOfThirst, "a lack of water");
+        killPlants(diedOfWater, "over-watering");
+    }
+
+    private void killPlants(ArrayList<String> plants, String cause) {
+        for (String p : plants) {
+            try {
+                mainGarden.removePlant(p);
+            } catch (NameNotInGardenException e) {
+                System.out.println("Plant Removal Error");
+            }
+            System.out.println("\n" + p + " Has died from " + cause);
         }
     }
 
@@ -94,13 +107,14 @@ public class GameApp {
     private void waterPlant() {
         System.out.println("What is the name of the plant you'd like to water?:");
         String name = input.next();
+        System.out.println("How many times would you like to water " + name + "?");
+        int amount = input.nextInt();
 
-        if (mainGarden.nameInGarden(name)) {
-            mainGarden.waterPlant(name);
-        } else {
+        try {
+            mainGarden.waterPlant(name, amount);
+        } catch (NameNotInGardenException e) {
             System.out.println("There is not plant of name " + name + " in your garden...");
         }
-
     }
 
     // MODIFIES: this
@@ -111,58 +125,64 @@ public class GameApp {
         String name = input.next();
 
         if (name.equals("0")) {
-            if (mainGarden.getListOfPlants().size() > 0) {
+            try {
                 mainGarden.removePlant();
-            } else {
+            } catch (EmptyGardenException e) {
                 System.out.println("Your garden is already empty");
             }
-        } else if (mainGarden.nameInGarden(name)) {
-            mainGarden.removePlant(name);
         } else {
-            System.out.println("There is not plant of name " + name + " in your garden...");
+            try {
+                mainGarden.removePlant(name);
+            } catch (NameNotInGardenException e) {
+                System.out.println("There is not plant of name " + name + " in your garden...");
+            }
         }
     }
 
     // MODIFIES: this
     // EFFECTS: Guides the user through adding a new plant to the garden
     private void addingPlant() {
-        Boolean naming = true;
-        Boolean seeding = true;
+        //Boolean naming = true;
+        //Boolean seeding = true;
+        Boolean makingPlant = true;
 
-        while (naming) {
+        while (makingPlant) {
             System.out.println("What is the name of the plant you'd like to add?:");
             String name = input.next();
-
-            if (mainGarden.nameInGarden(name)) {
+            System.out.println("What seed would you like to use? ");
+            String seed = input.next();
+            try {
+                mainGarden.addPlant(new Plant(name, seed));
+            } catch (NameAlreadyInGardenException e) {
                 System.out.println("There already exists a plant with that name. Try another one");
-            } else {
-                naming = false;
-                while (seeding) {
-                    System.out.println("What seed would you like to use? ");
-                    String seed = input.next();
-
-                    if (isValidSeed(seed)) {
-                        addPlant(name, seed);
-                        seeding = false;
-                    } else {
-                        invalidSeed();
-                    }
-                }
+            } catch (InvalidSeedAlphabetException e) {
+                invalidSeed();
             }
+            makingPlant = false;
         }
     }
+
+            //if (mainGarden.nameInGarden(name)) {
+            //    System.out.println("There already exists a plant with that name. Try another one");
+            //} else {
+            //    naming = false;
+            //    while (seeding) {
+            //        System.out.println("What seed would you like to use? ");
+            //        String seed = input.next();
+            //
+            //        if (isValidSeed(seed)) {
+            //            addPlant(name, seed);
+            //            seeding = false;
+            //        } else {
+            //            invalidSeed();
+            //        }
+            //    }
+            //}
 
     // EFFECTS: Prints out the return message for when an invalid seed is given
     public void invalidSeed() {
         System.out.println("Sorry, but this is not a valid seed. A valid seed contains only elements of:");
         System.out.println("{F, +, -, [, ]} \n" + "Additionally, each start brace [ has its own end brace ]");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Adds a plant to the mainGarden and prints an addition message
-    public void addPlant(String name, String seed) {
-        System.out.println("Perfect! " + name + " has been added to the garden.");
-        mainGarden.addPlant(new Plant(name, seed));
     }
 
     // EFFECTS: Prints out every plant for the user, or notifies them if their garden is empty
@@ -172,29 +192,17 @@ public class GameApp {
         } else {
             System.out.println("\nPlants:");
             for (Plant p : mainGarden.getListOfPlants()) {
-                System.out.println("\n" + p.getName());
-                System.out.println("\tShape: " + p.getLindenString());
-                System.out.println("\tHealth: " + p.health());
-                System.out.println("\tGrows every " + p.growthRate + " moons");
-                System.out.println("\n");
+                try {
+                    String health = p.health();
+                    System.out.println("\n" + p.getName());
+                    System.out.println("\tShape: " + p.getLindenString());
+                    System.out.println("\tHealth: " + health);
+                    System.out.println("\tGrows every " + p.growthRate + " moons");
+                } catch (ImpossibleThirstException e) {
+                    System.out.println("ERROR: Health not in valid range");
+                }
             }
         }
-    }
-
-    // EFFECTS: Returns true if the given seed is alphabet (within the lindenSystem's alphabet), false otherwise
-    private Boolean isValidSeed(String seed) {
-        ArrayList<Character> alphabet = new ArrayList<Character>();
-        alphabet.add('F');
-        alphabet.add('+');
-        alphabet.add('-');
-        alphabet.add('[');
-        alphabet.add(']');
-        for (int i = 0; i < (seed.length() - 1); i++) {
-            if (!alphabet.contains(seed.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
 }
