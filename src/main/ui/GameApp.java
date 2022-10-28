@@ -211,6 +211,10 @@ public class GameApp {
             System.out.println("Garden re-cultivated from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("ERROR: File not found at " + JSON_STORE);
+        } catch (InvalidSeedAlphabetException e) {
+            System.out.println("InvalidSeedAlphabetException exception");
+        } catch (NameAlreadyInGardenException e) {
+            System.out.println("NameAlreadyInGardenException exception");
         }
     }
 

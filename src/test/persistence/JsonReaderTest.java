@@ -1,5 +1,7 @@
 package persistence;
 
+import exceptions.InvalidSeedAlphabetException;
+import exceptions.NameAlreadyInGardenException;
 import model.Garden;
 import model.Plant;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,10 @@ public class JsonReaderTest extends JsonTest {
             fail("IOException expected");
         } catch (IOException e) {
             // pass
+        } catch (InvalidSeedAlphabetException e) {
+            fail("InvalidSeedAlphabetException not expected here");
+        } catch (NameAlreadyInGardenException e) {
+            fail("NameAlreadyInGardenException not expected here");
         }
     }
 
@@ -31,6 +37,10 @@ public class JsonReaderTest extends JsonTest {
             assertEquals(0, garden.getListOfPlants().size());
         } catch (IOException e) {
             fail("Couldn't read from file");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("InvalidSeedAlphabetException not expected here");
+        } catch (NameAlreadyInGardenException e) {
+            fail("NameAlreadyInGardenException not expected here");
         }
     }
 
@@ -48,6 +58,42 @@ public class JsonReaderTest extends JsonTest {
                     2, (float) 2, (float) 3.2);
         } catch (IOException e) {
             fail("Couldn't read from file");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("InvalidSeedAlphabetException not expected here");
+        } catch (NameAlreadyInGardenException e) {
+            fail("NameAlreadyInGardenException not expected here");
+        }
+    }
+
+    @Test
+    void testReaderSeedError() {
+        JsonReader reader = new JsonReader("./data/testReaderSeedErrorGarden.json");
+        try {
+            Garden garden = reader.read();
+            assertEquals(2, garden.getListOfPlants().size());
+            fail("Exception expected");
+        } catch (IOException e) {
+            fail("IOException not expected here");
+        } catch (InvalidSeedAlphabetException e) {
+            //Perfect!
+        } catch (NameAlreadyInGardenException e) {
+            fail("NameAlreadyInGardenException not expected here");
+        }
+    }
+
+    @Test
+    void testReaderNameAlreadyInGardenException() {
+        JsonReader reader = new JsonReader("./data/testReaderDoubleNameGarden.json");
+        try {
+            Garden garden = reader.read();
+            assertEquals(2, garden.getListOfPlants().size());
+            fail("Exception expected");
+        } catch (IOException e) {
+            fail("IOException not expected here");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("InvalidSeedAlphabetException not expected here");
+        } catch (NameAlreadyInGardenException e) {
+            //Perfect!
         }
     }
 }

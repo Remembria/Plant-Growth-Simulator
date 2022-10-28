@@ -41,6 +41,10 @@ public class JsonWriterTest extends JsonTest {
             assertEquals(0, g.getListOfPlants().size());
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        } catch (InvalidSeedAlphabetException e) {
+            System.out.println("InvalidSeedAlphabetException exception");
+        } catch (NameAlreadyInGardenException e) {
+            System.out.println("NameAlreadyInGardenException exception");
         }
     }
 

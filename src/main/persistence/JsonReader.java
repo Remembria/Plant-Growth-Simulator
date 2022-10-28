@@ -22,7 +22,7 @@ public class JsonReader {
 
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public Garden read() throws IOException {
+    public Garden read() throws IOException, InvalidSeedAlphabetException, NameAlreadyInGardenException {
         String jsonData = readFile(sourceFile);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseGarden(jsonObject);
@@ -40,7 +40,8 @@ public class JsonReader {
     }
 
     // EFFECTS: parses garden from JSON object and returns it
-    private Garden parseGarden(JSONObject jsonObject) {
+    private Garden parseGarden(JSONObject jsonObject) throws
+            InvalidSeedAlphabetException, NameAlreadyInGardenException {
         Garden garden = new Garden();
         addPlants(garden, jsonObject);
         return garden;
@@ -48,7 +49,8 @@ public class JsonReader {
 
     // MODIFIES: g
     // EFFECTS: parses thingies from JSON object and adds them to workroom
-    private void addPlants(Garden g, JSONObject jsonObject) {
+    private void addPlants(Garden g, JSONObject jsonObject) throws
+            InvalidSeedAlphabetException, NameAlreadyInGardenException {
         JSONArray jsonArray = jsonObject.getJSONArray("Plants");
         for (Object json : jsonArray) {
             JSONObject nextPlant = (JSONObject) json;
@@ -58,20 +60,21 @@ public class JsonReader {
 
     // MODIFIES: g
     // EFFECTS: parses plant from JSON object and adds it to garden
-    private void addPlant(Garden g, JSONObject jsonObject) {
+    private void addPlant(Garden g, JSONObject jsonObject) throws
+            InvalidSeedAlphabetException, NameAlreadyInGardenException {
         String name = jsonObject.getString("name");
         String lindenString = jsonObject.getString("linden string");
         int growthRate = jsonObject.getInt("growth rate");
         Float progressToGrow = jsonObject.getFloat("progress to grow");
         Float thirst = jsonObject.getFloat("thirst");
-        try {
-            Plant plant = new Plant(name, lindenString, growthRate, progressToGrow, thirst);
-            g.addPlant(plant);
-        } catch (InvalidSeedAlphabetException e) {
-            System.out.println("Invalid seed");
-        } catch (NameAlreadyInGardenException e) {
-            System.out.println("Name already in garden exception");
-        }
+        //try {
+        Plant plant = new Plant(name, lindenString, growthRate, progressToGrow, thirst);
+        g.addPlant(plant);
+        //} //catch (InvalidSeedAlphabetException e) {
+        //    System.out.println("Invalid seed");
+        //} catch (NameAlreadyInGardenException e) {
+        //    System.out.println("Name already in garden exception");
+        //}
     }
 
 }

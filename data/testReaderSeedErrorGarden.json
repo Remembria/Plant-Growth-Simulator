@@ -1,0 +1,23 @@
+{"Plants": [
+  {
+    "thirst": -0.3,
+    "linden string": "FF[F+F]F-F",
+    "progress to grow": 4,
+    "name": "Rebecca",
+    "growth rate": 8
+  },
+  {
+    "thirst": 9,
+    "linden string": "FF+",
+    "progress to grow": 1,
+    "name": "John",
+    "growth rate": 3
+  },
+  {
+    "thirst": 3,
+    "linden string": "F+F+F+F+F+Fa",
+    "progress to grow": 0.1,
+    "name": "Snow",
+    "growth rate": 10
+  }
+]}

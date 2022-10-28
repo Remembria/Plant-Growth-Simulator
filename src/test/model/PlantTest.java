@@ -175,6 +175,24 @@ public class PlantTest {
     }
 
     @Test
+    public void testGrowJustEnoughLindenStringLengthTooLarge() {
+        String lindenString = "";
+        for (int i = 0; i < 100; i++) {
+            lindenString += "F";
+        }
+        assertEquals(100, lindenString.length());
+        try {
+            Plant plantTwo = new Plant("John", lindenString, 3, (float) 0, (float) 0);
+            plantTwo.grow(1, 1);
+            assertEquals(lindenString, plantTwo.getLindenString());
+            assertEquals(1, plantTwo.getThirst());
+            assertEquals(plantTwo.growthRate, plantTwo.getProgressToGrow());
+        } catch (InvalidSeedAlphabetException e) {
+            System.out.println("Invalid seed given");
+        }
+    }
+
+    @Test
     public void testGrowthNotThirstyNoUpdate() {
         plant.setThirst(0);
         plant.setProgressToGrow((float) 2.1);

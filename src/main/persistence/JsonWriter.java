@@ -30,7 +30,7 @@ public class JsonWriter {
     // EFFECTS: writes JSON representation of workroom to file
     public void write(Garden g) {
         JSONObject json = g.toJson();
-        writer.print((json.toString(INDENT_FACTOR)));
+        saveToFile((json.toString(INDENT_FACTOR)));
     }
 
     // MODIFIES: this
