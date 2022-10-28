@@ -4,14 +4,16 @@ package model;
 import exceptions.EmptyGardenException;
 import exceptions.NameAlreadyInGardenException;
 import exceptions.NameNotInGardenException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
 
-import javax.naming.Name;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 // Represents a group of plants and their respective information
-public class Garden {
+public class Garden implements Writable {
 
     private ArrayList<Plant> listOfPlants;
 
@@ -20,9 +22,9 @@ public class Garden {
         listOfPlants = new ArrayList<Plant>();
     }
 
-    // (Deprecated) REQUIRES: A plant with the same name is not already in the garden
     // MODIFIES: this
     // EFFECTS: Adds another plant to the garden at the end of listOfPlants
+    // Throws a NameAlreadyInGardenException if user tries to add plant of same name to garden
     public void addPlant(Plant plant) throws NameAlreadyInGardenException {
         ArrayList<String> nameList = (ArrayList<String>)
                 getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList());
@@ -32,9 +34,9 @@ public class Garden {
         listOfPlants.add(plant);
     }
 
-    // (Deprecated) REQUIRES: listOfPlants must not be empty
     // MODIFIES: this
     // EFFECTS: Removes the last element of the garden listOfPlants
+    // Throws an EmptyGardenException if garden is empty, as cannot remove the last plant of an empty garden
     public void removePlant() throws EmptyGardenException {
         if (getListOfPlants().isEmpty()) {
             throw new EmptyGardenException();
@@ -42,9 +44,9 @@ public class Garden {
         listOfPlants.remove(listOfPlants.size() - 1);
     }
 
-    // (Deprecated) REQUIRES: listOfPlants must have a plant with name plantName
     // MODIFIES: this
     // EFFECTS: Removes the plant instance with name plantName from the listOfPlants
+    // Throws a NameNotInGardenException if the given name to search for is not in the garden
     public void removePlant(String plantName) throws NameNotInGardenException {
         if (!nameInGarden(plantName)) {
             throw new NameNotInGardenException();
@@ -53,9 +55,9 @@ public class Garden {
 
     }
 
-    // (Deprecated) REQUIRES: listOfPlants must have a plant with name plantName
     // MODIFIES: this
     // EFFECTS: Waters the named plant
+    // Throws a NameNotInGardenException if the given name to search for is not in the garden
     public void waterPlant(String name, int amount) throws NameNotInGardenException {
         if (!nameInGarden(name)) {
             throw new NameNotInGardenException();
@@ -71,12 +73,8 @@ public class Garden {
         return nameList.contains(name);
     }
 
-    // REQUIRES: listOfPlants must have a plant with name plantName
-    // EFFECTS: Returns the index of where the given plant name is within the garden
+    // EFFECTS: Returns the index of where the given plant name is within the garden (or -1 if name not found)
     private int indexOfNameInGarden(String name) throws NameNotInGardenException {
-        if (!nameInGarden(name)) {
-            throw new NameNotInGardenException();
-        }
         ArrayList<String> nameList = (ArrayList<String>)
                 getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList());
         return nameList.indexOf(name);
@@ -84,6 +82,23 @@ public class Garden {
 
     public ArrayList<Plant> getListOfPlants() {
         return listOfPlants;
+    }
+
+    // EFFECTS: Returns this garden in the form of a JSONObject
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Plants", plantsToJson());
+        return json;
+    }
+
+    // EFFECTS: Returns the list of plants in the form of a JSONArray
+    private JSONArray plantsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Plant p : this.listOfPlants) {
+            jsonArray.put(p.toJson());
+        }
+        return jsonArray;
     }
 
 }

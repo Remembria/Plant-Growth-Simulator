@@ -4,10 +4,17 @@ import exceptions.EmptyGardenException;
 import exceptions.InvalidSeedAlphabetException;
 import exceptions.NameAlreadyInGardenException;
 import exceptions.NameNotInGardenException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -156,6 +163,18 @@ class GardenTest {
     }
 
     @Test
+    public void testRemovePlantNameNotInGardenException() {
+        try {
+            testGarden.removePlant("Popp");
+            assertEquals(0, testGarden.getListOfPlants().size());
+            fail("No exception given");
+        } catch (NameNotInGardenException e) {
+            //Perfect
+        }
+        assertEquals(0, testGarden.getListOfPlants().size());
+    }
+
+    @Test
     public void testWaterPlantSingularName() {
         plant.setThirst(5);
         try {
@@ -186,13 +205,12 @@ class GardenTest {
             assertEquals(plant, testGarden.getListOfPlants().get(0));
             assertEquals(plantTwo, testGarden.getListOfPlants().get(1));
             assertEquals(plantThree, testGarden.getListOfPlants().get(2));
-            testGarden.waterPlant("Poppy", 1);
-            testGarden.waterPlant("Poppy", 1);
+            testGarden.waterPlant("Poppy", 2);
             testGarden.waterPlant("Charlie", 1);
             testGarden.waterPlant("Candice", 1);
             assertEquals(3, plant.getThirst());
             assertEquals(8, plantTwo.getThirst());
-            assertEquals(0, plantThree.getThirst());
+            assertEquals(-1, plantThree.getThirst());
         } catch (InvalidSeedAlphabetException e) {
             fail("Invalid plant alphabet given");
         } catch (NameAlreadyInGardenException e) {
@@ -260,4 +278,42 @@ class GardenTest {
             fail("Name should not already be in garden");
         }
     }
+
+    @Test
+    public void testToJsonSingular() {
+        try {
+            testGarden.addPlant(new Plant("Rob", "FFF", 9, (float) 3, (float) 5.5));
+            testGarden.addPlant(new Plant("Lily", "F+F", 2, (float) 2, (float) 4));
+            StringBuilder contentBuilder = new StringBuilder();
+
+            try (Stream<String> stream = Files.lines(Paths.get("./data/testGardenToJsonGeneral.json"),
+                    StandardCharsets.UTF_8)) {
+                stream.forEach(s -> contentBuilder.append(s));
+            }
+            String jsonData = contentBuilder.toString();
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            JSONObject gardenJson = testGarden.toJson();
+            JSONArray gardenJsonArray = gardenJson.getJSONArray("Plants");
+
+            JSONArray jsonArray = jsonObject.getJSONArray("Plants");
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject plantOne = (JSONObject) jsonArray.get(i);
+                JSONObject plantTwo = (JSONObject) gardenJsonArray.get(i);
+                assertEquals(plantOne.getString("name"), plantTwo.getString("name"));
+                assertEquals(plantOne.getString("linden string"), plantTwo.getString("linden string"));
+                assertEquals(plantOne.getInt("growth rate"), plantTwo.getInt("growth rate"));
+                assertEquals(plantOne.getFloat("progress to grow"), plantTwo.getFloat("progress to grow"));
+                assertEquals(plantOne.getFloat("thirst"), plantTwo.getFloat("thirst"));
+            }
+        } catch (IOException e) {
+            fail("Couldn't read from file");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("Seed alphabet incorrect");
+        } catch (NameAlreadyInGardenException e) {
+            fail("Name is already in garden");
+        }
+    }
+
 }

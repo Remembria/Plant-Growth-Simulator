@@ -3,21 +3,25 @@ package model;
 import exceptions.ImpossibleThirstException;
 import exceptions.GameSpeedZeroException;
 import exceptions.InvalidSeedAlphabetException;
+import org.json.JSONObject;
+import persistence.Writable;
 
 import java.util.ArrayList;
 
 //A representation of the plant agent, including its L-System
-public class Plant extends LindenmayerSystem {
+public class Plant extends LindenmayerSystem implements Writable {
 
     public final int growthRate;
 
-    // CONSTRAINT: 0 <= thirst <= 10, where 0 is well watered, and 10 deathly dry
+    // CONSTRAINT: -1 <= thirst <= 10, where -1 is over-watered, and 10 deathly dry
     private float thirst;
     private float progressToGrow;
     private String name;
 
     // (Deprecated) REQUIRES: The alphabet of the axiom is valid (within the set {"F", "+", "-", "[", "]"})
     // EFFECTS: Generates a plant seed
+    // Throws an InvalidSeedAlphabetException error if seed is invalid – so either alphabet {"F", "+", "-", "[", "]"}
+    // is wrong or brackets mismatched
     public Plant(String name, String axiom) throws InvalidSeedAlphabetException {
         if (!isValidSeed(axiom)) {
             throw new InvalidSeedAlphabetException();
@@ -29,9 +33,25 @@ public class Plant extends LindenmayerSystem {
         super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
     }
 
+    // EFFECTS: Generates a plant seed with control over every parameter
+    public Plant(String name, String axiom, int growthRate, float progressToGrow, float thirst)
+            throws InvalidSeedAlphabetException {
+        if (!isValidSeed(axiom)) {
+            throw new InvalidSeedAlphabetException();
+        }
+        this.name = name;
+        super.lindenString = axiom;
+        this.growthRate = growthRate;
+        this.progressToGrow = progressToGrow;
+        this.thirst = thirst;
+        super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
+    }
+
     // (Deprecated) REQUIRES: gameSpeed != 0 (or else no growth will ever occur) (REMOVE)
     // MODIFIES: this
     // EFFECTS: Grows the plant given a certain elapsedTime has passed at a given rate
+    // Throws an unchecked exception if gameSpeed is zero as the plants won't grow: but is unchecked as may be useful
+    // for testing or for user enjoyment
     public void grow(double elapsedTime, float gameSpeed) throws GameSpeedZeroException { //gameSpeed = 0.05
         if (gameSpeed == 0) {
             throw new GameSpeedZeroException();
@@ -54,16 +74,16 @@ public class Plant extends LindenmayerSystem {
         setThirst(thirst - amount);
     }
 
-    // (Deprecated) REQUIRES: 0 <= thirst <= 10
     // EFFECTS: Returns how healthy the plant currently is
+    // Throws an ImpossibleThirstException if thirst not in range -1 <= thirst <= 10
     public String health() throws ImpossibleThirstException {
         if (thirst < -1 || thirst > 10) {
             throw new ImpossibleThirstException();
         }
         if (thirst == -1) {
-            return "Too much water...";
+            return "Too Much Water...";
         } else if (thirst == 0) {
-            return "Perfectly watered";
+            return "Perfectly Watered";
         } else if (thirst == 1) {
             return "Freshly Watered!!";
         } else if (thirst <= 3) {
@@ -99,8 +119,7 @@ public class Plant extends LindenmayerSystem {
 
     // EFFECTS: Returns true if the given seed is within the lindenSystem alphabet and bracket syntax is correct
     private Boolean isValidSeed(String seed) {
-        int forwardsBrackets = 0;
-        int backwardsBrackets = 0;
+        int bracketsBalance = 0;
         ArrayList<Character> alphabet = new ArrayList<Character>();
         alphabet.add('F');
         alphabet.add('+');
@@ -111,16 +130,27 @@ public class Plant extends LindenmayerSystem {
             if (!alphabet.contains(seed.charAt(i))) {
                 return false;
             } else if (seed.charAt(i) == '[') {
-                forwardsBrackets++;
-            } else if (seed.charAt(i) == '[') {
-                backwardsBrackets--;
+                bracketsBalance++;
+            } else if (seed.charAt(i) == ']') {
+                bracketsBalance--;
             }
         }
-        if (forwardsBrackets == backwardsBrackets) {
+        if (bracketsBalance == 0) {
             return true;
         } else {
             return false;
         }
     }
 
+    // EFFECTS: Returns this plant in the form of a JSONObject
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("growth rate", this.growthRate);
+        json.put("thirst", this.thirst);
+        json.put("progress to grow", this.progressToGrow);
+        json.put("name", this.name);
+        json.put("linden string", super.lindenString);
+        return json;
+    }
 }

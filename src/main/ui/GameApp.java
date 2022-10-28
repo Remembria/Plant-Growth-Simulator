@@ -3,7 +3,11 @@ package ui;
 import exceptions.*;
 import model.Garden;
 import model.Plant;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -13,13 +17,18 @@ import java.util.stream.Stream;
 public class GameApp {
     private Scanner input;
     private Garden mainGarden;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+
+    private static final String JSON_STORE = "./data/garden.json";
 
     //EFFECTS: Instantiates the garden and runs the game
-    public GameApp() {
-        //listOfGardens = new ArrayList<Garden>();
+    public GameApp() throws FileNotFoundException {
         mainGarden = new Garden();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runGame();
     }
 
@@ -85,6 +94,8 @@ public class GameApp {
         System.out.println("\ta -> add plant");
         System.out.println("\tr -> remove plant");
         System.out.println("\tw -> water plant");
+        System.out.println("\tl -> load garden");
+        System.out.println("\ts -> save garden");
         System.out.println("\tq -> quit");
     }
 
@@ -97,8 +108,12 @@ public class GameApp {
             addingPlant();
         } else if (c.equals("r")) {
             removingPlant();
-        } else {
+        } else if (c.equals("w")) {
             waterPlant();
+        } else if (c.equals("l")) {
+            loadGardenFromJson();
+        } else {
+            writeGardenToJson();
         }
     }
 
@@ -162,23 +177,6 @@ public class GameApp {
         }
     }
 
-            //if (mainGarden.nameInGarden(name)) {
-            //    System.out.println("There already exists a plant with that name. Try another one");
-            //} else {
-            //    naming = false;
-            //    while (seeding) {
-            //        System.out.println("What seed would you like to use? ");
-            //        String seed = input.next();
-            //
-            //        if (isValidSeed(seed)) {
-            //            addPlant(name, seed);
-            //            seeding = false;
-            //        } else {
-            //            invalidSeed();
-            //        }
-            //    }
-            //}
-
     // EFFECTS: Prints out the return message for when an invalid seed is given
     public void invalidSeed() {
         System.out.println("Sorry, but this is not a valid seed. A valid seed contains only elements of:");
@@ -202,6 +200,29 @@ public class GameApp {
                     System.out.println("ERROR: Health not in valid range");
                 }
             }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Loads a garden from the given JSON file
+    private void loadGardenFromJson() {
+        try {
+            mainGarden = jsonReader.read();
+            System.out.println("Garden re-cultivated from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("ERROR: File not found at " + JSON_STORE);
+        }
+    }
+
+    // EFFECTS: Writes the current garden to the JSON_STORE file directory
+    private void writeGardenToJson() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(mainGarden);
+            jsonWriter.close();
+            System.out.println("Garden checkpoint saved to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: File not found at " + JSON_STORE);
         }
     }
 

@@ -1,9 +1,20 @@
 package model;
 
+import exceptions.GameSpeedZeroException;
 import exceptions.ImpossibleThirstException;
 import exceptions.InvalidSeedAlphabetException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import persistence.JsonReader;
+import persistence.JsonTest;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +52,39 @@ public class PlantTest {
     }
 
     @Test
+    public void testPlantInvalidSeedAlphabetExceptionForwardBracketMismatch() {
+        Plant plantTwo;
+        try {
+            plantTwo = new Plant("Jerome", "F[F]]");
+            fail("No exception caught");
+        } catch (InvalidSeedAlphabetException e) {
+            //Perfect
+        }
+    }
+
+    @Test
+    public void testPlantInvalidSeedAlphabetExceptionBackwardsBracketMismatch() {
+        Plant plantTwo;
+        try {
+            plantTwo = new Plant("Jerome", "[F[F]");
+            fail("No exception caught");
+        } catch (InvalidSeedAlphabetException e) {
+            //Perfect
+        }
+    }
+
+    @Test
+    public void testPlantInvalidSeedAlphabetExceptionDetailed() {
+        Plant plantTwo;
+        try {
+            plantTwo = new Plant("Rebecca", "FF[F+F]F-F]", 8, (float) 4, (float) -0.3);
+            fail("No exception caught");
+        } catch (InvalidSeedAlphabetException e) {
+            //Perfect
+        }
+    }
+
+    @Test
     public void testWaterMiddleCase() {
         plant.setThirst(5);
         plant.water(1);
@@ -51,14 +95,14 @@ public class PlantTest {
     public void testWaterBoundaryCase() {
         plant.setThirst((float) 0.9);
         plant.water(1);
-        assertEquals(0, plant.getThirst());
+        assertTrue(-0.098 > plant.getThirst() && plant.getThirst() > -0.11 );
     }
 
     @Test
     public void testHealthNoExceptions() {
         try {
             plant.setThirst(-1);
-            assertEquals("Too much water...", plant.health());
+            assertEquals("Too Much Water...", plant.health());
             plant.setThirst(0);
             assertEquals("Perfectly Watered", plant.health());
             plant.setThirst(1);
@@ -151,7 +195,7 @@ public class PlantTest {
     }
 
     @Test
-    public void testPlantUpdateLindenSystemMany() {
+    public void testPlantGrowMany() {
         plant.setThirst(0);
         plant.setProgressToGrow(0);
         plant.grow(1, 1);
@@ -166,5 +210,51 @@ public class PlantTest {
                 "[-F+F+F]+[+F-F-F]-FF-[-F+F+F]+[+F-F-F]]", plant.getLindenString());
         assertEquals(2, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
+    }
+
+    @Test
+    public void testPlantGrowGameSpeedZeroException() {
+        plant.setThirst(0);
+        plant.setProgressToGrow((float) 2);
+        try {
+            plant.grow(2, 0);
+            fail("No exception given");
+        } catch (GameSpeedZeroException e) {
+            //PERFECT
+        }
+        assertEquals("F", plant.getLindenString());
+        assertEquals(0, plant.getThirst());
+        assertEquals((float) 2, plant.getProgressToGrow());
+    }
+
+    @Test
+    public void testToJsonSingular() {
+        try {
+            StringBuilder contentBuilder = new StringBuilder();
+
+            try (Stream<String> stream = Files.lines(Paths.get("./data/testPlantToJsonGeneral.json"),
+                    StandardCharsets.UTF_8)) {
+                stream.forEach(s -> contentBuilder.append(s));
+            }
+            String jsonData = contentBuilder.toString();
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray jsonArray = jsonObject.getJSONArray("Plants");
+            JSONObject plant = (JSONObject) jsonArray.get(0);
+            jsonObject.getJSONArray("Plants").get(0);
+            JSONObject plantTwo = new Plant(plant.getString("name"),
+                    plant.getString("linden string"),
+                    plant.getInt("growth rate"),
+                    plant.getFloat("progress to grow"),
+                    plant.getFloat("thirst")).toJson();
+            assertEquals("Rob", plantTwo.getString("name"));
+            assertEquals("FFF", plantTwo.getString("linden string"));
+            assertEquals(9, plantTwo.getInt("growth rate"));
+            assertEquals((float) 3, plantTwo.getFloat("progress to grow"));
+            assertEquals((float) 5.5, plantTwo.getFloat("thirst"));
+        } catch (IOException e) {
+            fail("Couldn't read from file");
+        } catch (InvalidSeedAlphabetException e) {
+            fail("Seed alphabet incorrect");
+        }
     }
 }

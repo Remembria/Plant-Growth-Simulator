@@ -1,0 +1,16 @@
+{"Plants": [
+  {
+    "thirst": 4.2,
+    "linden string": "FF-[-F+F+F]+[+F-F-F]",
+    "progress to grow": 2,
+    "name": "Lily",
+    "growth rate": 2
+  },
+  {
+    "thirst": 3.2,
+    "linden string": "FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]+",
+    "progress to grow": 2,
+    "name": "Brentwood",
+    "growth rate": 2
+  }
+]}

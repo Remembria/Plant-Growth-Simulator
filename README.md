@@ -24,5 +24,7 @@ understanding of mathematical **L-systems** through their application within a p
 - **As a user**, I want to be able to remove plants from my garden
 - **As a user**, I want to be able to view all plants within my garden
 - **As a user**, I want my plants to grow over time when watered and cared for
+- **As a user**, I want my plants to die if over-watered
+- **As a user**, I want my plants to stop growing once they reach maturity
 - **As a user**, I want to be able to save the state of my garden to a file
 - **As a user**, I want to load a prior garden state from a file and continue playing
