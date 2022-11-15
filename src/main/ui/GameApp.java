@@ -6,30 +6,132 @@ import model.Plant;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 //The gardening game application
-public class GameApp {
+public class GameApp extends JFrame{
+
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
+
     private Scanner input;
     private Garden mainGarden;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
+    //private PlantDrawer drawer;
+    private DrawingCanvas drawing;
+
+    //private JFrame jframe;
+
     private static final String JSON_STORE = "./data/garden.json";
 
     //EFFECTS: Instantiates the garden and runs the game
     public GameApp() throws FileNotFoundException {
+        super("Gardening Simulator");
+        setup();
         mainGarden = new Garden();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         runGame();
+    }
+
+    private void setup() {
+        int panelWidth = 800;
+        int panelHeight = 300;
+        //jframe = new JFrame("Gardening Simulator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setMinimumSize(new Dimension(GameApp.WIDTH, GameApp.HEIGHT));
+        setLocationRelativeTo(null);
+
+        //setLayout(new BorderLayout());
+        //setMinimumSize(new Dimension(WIDTH, HEIGHT));
+
+        DrawingCanvas newDrawing = new DrawingCanvas();
+        drawing = newDrawing;
+
+        JPanel jpanel = new JPanel();
+        //jpanel.setBounds(0, 500, 800, 275);
+        jpanel.setBounds(0, HEIGHT - panelHeight, panelWidth, panelHeight);
+        jpanel.setBackground(new Color(75, 162, 100));
+
+        //JTextField inputText = new JTextField(20);
+        //inputText.setSize(200, 200);
+        //inputText.addActionListener(new EnterPressed());
+        //jpanel.add(inputText);
+
+        JButton viewAllPlantsButton = new JButton("View All Plants");
+        viewAllPlantsButton.setBorderPainted(true);
+        viewAllPlantsButton.setFocusPainted(true);
+        viewAllPlantsButton.setContentAreaFilled(true);
+        jpanel.add(viewAllPlantsButton);
+        viewAllPlantsButton.addActionListener(new ViewAllPlants());
+        viewAllPlantsButton.setPreferredSize(new Dimension(700, 40));
+
+        JButton addPlantButton = new JButton("Add Plant");
+        addPlantButton.setBorderPainted(true);
+        addPlantButton.setFocusPainted(true);
+        addPlantButton.setContentAreaFilled(true);
+        jpanel.add(addPlantButton);
+        addPlantButton.addActionListener(new AddPlant());
+        addPlantButton.setPreferredSize(new Dimension(700, 40));
+
+        JButton removePlantButton = new JButton("Remove Plant");
+        removePlantButton.setBorderPainted(true);
+        removePlantButton.setFocusPainted(true);
+        removePlantButton.setContentAreaFilled(true);
+        jpanel.add(removePlantButton);
+        removePlantButton.addActionListener(new RemovePlant());
+        removePlantButton.setPreferredSize(new Dimension(700, 40));
+
+        JButton waterPlantButton = new JButton("Water Plant");
+        waterPlantButton.setBorderPainted(true);
+        waterPlantButton.setFocusPainted(true);
+        waterPlantButton.setContentAreaFilled(true);
+        jpanel.add(waterPlantButton);
+        waterPlantButton.addActionListener(new WaterPlant());
+        waterPlantButton.setPreferredSize(new Dimension(700, 40));
+
+        JButton loadGardenButton = new JButton("Load Garden");
+        loadGardenButton.setBorderPainted(true);
+        loadGardenButton.setFocusPainted(true);
+        loadGardenButton.setContentAreaFilled(true);
+        jpanel.add(loadGardenButton);
+        loadGardenButton.addActionListener(new LoadGarden());
+        loadGardenButton.setPreferredSize(new Dimension(700, 40));
+
+        JButton saveGardenButton = new JButton("Save Garden");
+        saveGardenButton.setBorderPainted(true);
+        saveGardenButton.setFocusPainted(true);
+        saveGardenButton.setContentAreaFilled(true);
+        jpanel.add(saveGardenButton);
+        saveGardenButton.addActionListener(new SaveGarden());
+        saveGardenButton.setPreferredSize(new Dimension(700, 40));
+
+        add(drawing, BorderLayout.NORTH);
+        validate();
+        pack();
+        add(jpanel, BorderLayout.SOUTH);
+        setLayout(null);
+        setVisible(true);
+        //jframe.add(jpanel);
+        //jframe.add(newDrawing);
+        //jframe.pack();
+
+        //repaint();
+
+        //SwingUtilities.isEventDispatchThread();
+
     }
 
     // MODIFIES: this
@@ -157,8 +259,6 @@ public class GameApp {
     // MODIFIES: this
     // EFFECTS: Guides the user through adding a new plant to the garden
     private void addingPlant() {
-        //Boolean naming = true;
-        //Boolean seeding = true;
         Boolean makingPlant = true;
 
         while (makingPlant) {
@@ -230,4 +330,194 @@ public class GameApp {
         }
     }
 
+
+
+
+
+
+    private class ViewAllPlants implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+    }
+
+    private class AddPlant implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //JOptionPane.showMessageDialog(jframe,
+            //        "Eggs are not supposed to be green.",
+            //        "Gardener:",
+            //        JOptionPane.PLAIN_MESSAGE);
+            //Object[] possibilities = null;
+            JFrame jframe = new JFrame();
+
+            String plantName = (String) JOptionPane.showInputDialog(jframe,
+                    "What is the name of the plant you'd like to add?:",
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+
+            if ((plantName != null) && (plantName.length() > 0)) {
+                String seed = (String) JOptionPane.showInputDialog(jframe,
+                        "What seed would you like to use?:",
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        null,
+                        null);
+                if ((seed != null) && (seed.length() > 0)) {
+                    try {
+                        mainGarden.addPlant(new Plant(plantName, seed));
+                    } catch (NameAlreadyInGardenException error) {
+                        JOptionPane.showMessageDialog(jframe,
+                                        "ERROR: There already exists a plant with that name. Try another one",
+                                        "Groundskeeper:",
+                                        JOptionPane.PLAIN_MESSAGE);
+                        //System.out.println("There already exists a plant with that name. Try another one");
+                    } catch (InvalidSeedAlphabetException error) {
+                        JOptionPane.showMessageDialog(jframe,
+                                "ERROR: Sorry, but this is not a valid seed. "
+                                        + "A valid seed contains only elements of: \n"
+                                + "{F, +, -, [, ]} \n" + "Additionally, each start brace [ has its own end brace ]",
+                                "Groundskeeper:",
+                                JOptionPane.PLAIN_MESSAGE);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private class RemovePlant implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFrame jframe = new JFrame();
+
+            String nameToRemove = (String) JOptionPane.showInputDialog(jframe,
+                    "What is the name of the plant you'd like to remove?: \n"
+                            + "(type 0 to remove the last added plant)",
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+
+            if ((nameToRemove != null) && (nameToRemove.length() > 0)) {
+                if (nameToRemove.equals("0")) {
+                    try {
+                        mainGarden.removePlant();
+                    } catch (EmptyGardenException error) {
+                        JOptionPane.showMessageDialog(jframe,
+                                "ERROR: Your garden is already empty",
+                                "Groundskeeper:",
+                                JOptionPane.PLAIN_MESSAGE);
+                    }
+                } else {
+                    try {
+                        mainGarden.removePlant(nameToRemove);
+                    } catch (NameNotInGardenException error) {
+                        JOptionPane.showMessageDialog(jframe,
+                                "ERROR: There is not plant of name " + nameToRemove + " in your garden...",
+                                "Groundskeeper:",
+                                JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        }
+    }
+
+    private class WaterPlant implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFrame jframe = new JFrame();
+
+            String nameToWater = (String) JOptionPane.showInputDialog(jframe,
+                    "What is the name of the plant you'd like to water?:",
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null);
+
+            if ((nameToWater != null) && (nameToWater.length() > 0)) {
+                String timesToWater = (String) JOptionPane.showInputDialog(jframe,
+                        "How many times would you like to water " + nameToWater + "?",
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        null,
+                        null);
+
+                if (Integer.parseInt(timesToWater) >= 0) {
+                    try {
+                        mainGarden.waterPlant(nameToWater, Integer.parseInt(timesToWater));
+                    } catch (NameNotInGardenException error) {
+                        JOptionPane.showMessageDialog(jframe,
+                                "ERROR: There is not plant of name " + nameToWater + " in your garden...",
+                                "Groundskeeper:",
+                                JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        }
+    }
+
+    private class LoadGarden implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFrame jframe = new JFrame();
+
+            try {
+                mainGarden = jsonReader.read();
+            } catch (IOException error) {
+                JOptionPane.showMessageDialog(jframe,
+                        "ERROR: File not found at " + JSON_STORE,
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (InvalidSeedAlphabetException error) {
+                JOptionPane.showMessageDialog(jframe,
+                        "ERROR: InvalidSeedAlphabetException",
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (NameAlreadyInGardenException error) {
+                JOptionPane.showMessageDialog(jframe,
+                        "ERROR: NameAlreadyInGardenException",
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE);
+            }
+            JOptionPane.showMessageDialog(jframe,
+                    "Garden re-cultivated from " + JSON_STORE,
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    private class SaveGarden implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            JFrame jframe = new JFrame();
+
+            try {
+                jsonWriter.open();
+                jsonWriter.write(mainGarden);
+                jsonWriter.close();
+            } catch (FileNotFoundException error) {
+                JOptionPane.showMessageDialog(jframe,
+                        "ERROR: File not found at " + JSON_STORE,
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE);
+            }
+            JOptionPane.showMessageDialog(jframe,
+                    "Garden checkpoint saved to " + JSON_STORE,
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
+    }
 }

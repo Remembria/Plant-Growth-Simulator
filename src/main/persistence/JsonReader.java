@@ -20,7 +20,7 @@ public class JsonReader {
         this.sourceFile = sourceFile;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads garden from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Garden read() throws IOException, InvalidSeedAlphabetException, NameAlreadyInGardenException {
         String jsonData = readFile(sourceFile);
