@@ -8,21 +8,27 @@ import java.awt.*;
 
 public class DrawingCanvas extends JPanel {
 
-    Plant plant;
-
-    PlantDrawer drawer = new PlantDrawer();
+    private Plant plant;
+    private PlantDrawer drawer = new PlantDrawer();
 
     public DrawingCanvas() {
         super();
         setBorder(BorderFactory.createLineBorder(Color.black));
-        //setPreferredSize(new Dimension(600,600));
+        setPreferredSize(new Dimension(600,600));
         try {
-            plant = new Plant("Jeremy", "F[+F[+F]F][-F[-F]F]F[+F][-F]");
+            plant = new Plant("", "");
         } catch (InvalidSeedAlphabetException e) {
             System.out.println("Invalid seed alphabet exception given");
         }
         setBackground(Color.white);
+    }
 
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
+    public Plant getPlant() {
+        return this.plant;
     }
 
     @Override

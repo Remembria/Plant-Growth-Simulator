@@ -74,7 +74,7 @@ public class Garden implements Writable {
     }
 
     // EFFECTS: Returns the index of where the given plant name is within the garden (or -1 if name not found)
-    private int indexOfNameInGarden(String name) throws NameNotInGardenException {
+    public int indexOfNameInGarden(String name) throws NameNotInGardenException {
         ArrayList<String> nameList = (ArrayList<String>)
                 getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList());
         return nameList.indexOf(name);

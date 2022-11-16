@@ -28,6 +28,7 @@ understanding of mathematical **L-systems** through their application within a p
 - **As a user**, I want my plants to stop growing once they reach maturity
 - **As a user**, I want to be able to save the state of my garden to a file
 - **As a user**, I want to load a prior garden state from a file and continue playing
+- **As a user**, I want plant growth to have an element of randomness
 
 ### Citations:
 

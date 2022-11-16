@@ -14,9 +14,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 //The gardening game application
-public class GameApp extends JFrame{
+public class GameApp extends JFrame {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
@@ -25,6 +26,9 @@ public class GameApp extends JFrame{
     private Garden mainGarden;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private long repaintTimer = 0;
+
+    //private double zoomFactor;
 
     //private PlantDrawer drawer;
     private DrawingCanvas drawing;
@@ -138,37 +142,45 @@ public class GameApp extends JFrame{
     // EFFECTS: Processes user input and presents the tui
     private void runGame() {
         boolean playing = true;
-        String command;
-
+//        String command;
+//
         while (playing) {
             long startTime = System.nanoTime();
-            displayMenu();
-
-            command = input.next();
-            command = command.toLowerCase();
-
-            if (command.equals("q")) {
-                playing = false;
-                System.out.println("See you next time!");
-            } else {
-                processCommand(command);
-            }
-
-            long elapsedTimeNs = System.nanoTime() - startTime;
-
-            update(elapsedTimeNs);
+            //long elapsedTimeNs = System.nanoTime();
+            update(startTime);
         }
+//            long startTime = System.nanoTime();
+//            displayMenu();
+//
+//            command = input.next();
+//            command = command.toLowerCase();
+//
+//            if (command.equals("q")) {
+//                playing = false;
+//                System.out.println("See you next time!");
+//            } else {
+//                processCommand(command);
+//            }
+//
+//            long elapsedTimeNs = System.nanoTime() - startTime;
+
+            //update(elapsedTimeNs);
+        //}
     }
 
     // MODIFIES: this
     // EFFECTS: Updates the status of every plant in the garden over time
     private void update(long elapsedTimeNS) {
-        double elapsedTime = elapsedTimeNS / Math.pow(10, 9);
+
+        double elapsedTime = (System.nanoTime() - elapsedTimeNS) / Math.pow(10, 8);
+
+        //System.out.println(elapsedTime);
+
         ArrayList<String> diedOfThirst = new ArrayList<String>();
         ArrayList<String> diedOfWater = new ArrayList<String>();
         for (Plant p : mainGarden.getListOfPlants()) {
-            p.grow(elapsedTime, (float) 0.1);
-            if (p.getThirst() > 10) {
+            p.grow(elapsedTime, (float) 10);
+            if (p.getThirst() > 7) {
                 diedOfThirst.add(p.getName());
             } else if (p.getThirst() < -1) {
                 diedOfWater.add(p.getName());
@@ -176,6 +188,14 @@ public class GameApp extends JFrame{
         }
         killPlants(diedOfThirst, "a lack of water");
         killPlants(diedOfWater, "over-watering");
+
+        System.out.println(repaintTimer);
+        repaintTimer -= elapsedTime;
+        if (repaintTimer <= 0) {
+            repaint();
+            repaintTimer = (long) 10 * (drawing.getPlant().getLindenString().length());;
+
+        }
     }
 
     private void killPlants(ArrayList<String> plants, String cause) {
@@ -338,7 +358,28 @@ public class GameApp extends JFrame{
     private class ViewAllPlants implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            JFrame jframe = new JFrame();
 
+            String[] possibilities = ((ArrayList<String>)
+                    mainGarden.getListOfPlants().stream().map(Plant::getName).collect(Collectors.toList())).toArray(new String[0]);
+
+            //Object[] possibilities = mainGarden.getListOfPlants().toArray(new Plant[0]);
+            String plantToShow = (String) JOptionPane.showInputDialog(jframe,
+                    "What is the name of the plant you'd like to view?:",
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    possibilities,
+                    null);
+
+            if (mainGarden.nameInGarden(plantToShow)) {
+                try {
+                    drawing.setPlant(mainGarden.getListOfPlants().get(mainGarden.indexOfNameInGarden(plantToShow)));
+                    repaint();
+                } catch (NameNotInGardenException error) {
+                    System.out.println("NameNotInGardenException unexpected");
+                }
+            }
         }
     }
 

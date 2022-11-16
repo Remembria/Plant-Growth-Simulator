@@ -57,13 +57,14 @@ public class Plant extends LindenmayerSystem implements Writable {
             throw new GameSpeedZeroException();
         }
         setProgressToGrow(getProgressToGrow() - ((float) elapsedTime * gameSpeed));
+        System.out.println((float) elapsedTime * gameSpeed);
         if (getProgressToGrow() <= 0) {
             setProgressToGrow(growthRate);
-            if (thirst <= 5 && super.getLindenString().length() < 100) { // Caps plant size
+            if (thirst <= 5 && super.getLindenString().length() < 1000000) { // Caps plant size
                 super.updateLindenSystem();
             }
         }
-        setThirst((float) (getThirst() + (elapsedTime * gameSpeed)));
+        setThirst((float) (getThirst() + ((elapsedTime * gameSpeed) / 4)));
     }
 
 
