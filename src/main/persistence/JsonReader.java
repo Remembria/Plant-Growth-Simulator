@@ -48,7 +48,7 @@ public class JsonReader {
     }
 
     // MODIFIES: g
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // EFFECTS: parses plants from the JSON object and adds them to the garden
     private void addPlants(Garden g, JSONObject jsonObject) throws
             InvalidSeedAlphabetException, NameAlreadyInGardenException {
         JSONArray jsonArray = jsonObject.getJSONArray("Plants");

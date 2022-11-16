@@ -12,17 +12,19 @@ import java.util.Random;
 
 public class PlantDrawer {
 
+    private Boolean dead;
+
     public PlantDrawer() {}
 
     public void drawPlant(Plant plant, Graphics graphics, int startX, int startY) {
         String code = plant.getLindenString();
-        if (!plant.getLindenString().equals("")) {
-            graphics.drawString("Name: " + plant.getName(), 10, 10);
-            graphics.drawString("LindenString: " + plant.getLindenString(), 10, 30);
-            graphics.drawString("Progress to grow: " + plant.getProgressToGrow(), 10, 50);
-            graphics.drawString("Thirst: " + plant.getThirst(), 10, 70);
+        if (!dead) { //!plant.getLindenString().equals("") &&
+            graphics.drawString("Name: " + plant.getName(), 10, 15);
+            graphics.drawString("LindenString: " + plant.getLindenString(), 10, 35);
+            graphics.drawString("Progress to grow: " + plant.getProgressToGrow(), 10, 55);
+            graphics.drawString("Thirst: " + plant.getThirst(), 10, 75);
             List<String> codeList = new ArrayList<String>(Arrays.asList(code.split("")));
-            System.out.println(codeList);
+            //System.out.println(codeList);
             LinkedList<Integer> stackX = new LinkedList<Integer>();
             LinkedList<Integer> stackY = new LinkedList<Integer>();
             LinkedList<Double> stackTheta = new LinkedList<Double>();
@@ -30,7 +32,10 @@ public class PlantDrawer {
             int locX = startX;
             int locY = startY;
             double angle = Math.PI / 2.0;
-            int lineLength = 20;
+            //int lineLength = 20;
+            //float lineLength = (float) (50 / (Math.max(1, Math.pow(codeList.size(), 1 / 2))));
+            float lineLength = (float) (50 / Math.pow(codeList.size(), 1 / 2));
+            //System.out.println(lineLength);
 
             int newLocX;
             int newLocY;
@@ -69,6 +74,13 @@ public class PlantDrawer {
                 //System.out.println(stackY);
                 //System.out.println("---");
             }
+        } else {
+            graphics.drawRect(0,0,800,500);
         }
     }
+
+    public void setDead(Boolean dead) {
+        this.dead = dead;
+    }
+
 }

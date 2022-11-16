@@ -17,6 +17,7 @@ public class DrawingCanvas extends JPanel {
         setPreferredSize(new Dimension(600,600));
         try {
             plant = new Plant("", "");
+            drawer.setDead(true);
         } catch (InvalidSeedAlphabetException e) {
             System.out.println("Invalid seed alphabet exception given");
         }
@@ -29,6 +30,10 @@ public class DrawingCanvas extends JPanel {
 
     public Plant getPlant() {
         return this.plant;
+    }
+
+    public PlantDrawer getDrawer() {
+        return this.drawer;
     }
 
     @Override

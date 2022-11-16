@@ -28,6 +28,11 @@ public class GameApp extends JFrame {
     private JsonReader jsonReader;
     private long repaintTimer = 0;
 
+    private Plant plantToAdd;
+
+    private JButton addPlantButton;
+    private AddPlant addPlant = new AddPlant(this);
+
     //private double zoomFactor;
 
     //private PlantDrawer drawer;
@@ -40,6 +45,12 @@ public class GameApp extends JFrame {
     //EFFECTS: Instantiates the garden and runs the game
     public GameApp() throws FileNotFoundException {
         super("Gardening Simulator");
+        try {
+            plantToAdd = new Plant("", "");
+        } catch (InvalidSeedAlphabetException e) {
+            System.out.println("plant add error");
+        }
+        plantToAdd.setUse(false);
         setup();
         mainGarden = new Garden();
         input = new Scanner(System.in);
@@ -82,12 +93,12 @@ public class GameApp extends JFrame {
         viewAllPlantsButton.addActionListener(new ViewAllPlants());
         viewAllPlantsButton.setPreferredSize(new Dimension(700, 40));
 
-        JButton addPlantButton = new JButton("Add Plant");
+        addPlantButton = new JButton("Add Plant");
         addPlantButton.setBorderPainted(true);
         addPlantButton.setFocusPainted(true);
         addPlantButton.setContentAreaFilled(true);
         jpanel.add(addPlantButton);
-        addPlantButton.addActionListener(new AddPlant());
+        addPlantButton.addActionListener(addPlant);
         addPlantButton.setPreferredSize(new Dimension(700, 40));
 
         JButton removePlantButton = new JButton("Remove Plant");
@@ -178,22 +189,37 @@ public class GameApp extends JFrame {
 
         ArrayList<String> diedOfThirst = new ArrayList<String>();
         ArrayList<String> diedOfWater = new ArrayList<String>();
+        System.out.println("Plant to add:" + plantToAdd);
         for (Plant p : mainGarden.getListOfPlants()) {
             p.grow(elapsedTime, (float) 10);
-            if (p.getThirst() > 7) {
+            if (p.getThirst() >= 10) {
                 diedOfThirst.add(p.getName());
             } else if (p.getThirst() < -1) {
                 diedOfWater.add(p.getName());
             }
         }
+        if (plantToAdd.getUse().equals(true)) {
+            JFrame jframe = new JFrame();
+            try {
+                mainGarden.addPlant(plantToAdd);
+                System.out.println("Plant added!");
+            } catch (NameAlreadyInGardenException error) {
+                JOptionPane.showMessageDialog(jframe,
+                        "ERROR: There already exists a plant with that name. Try another one",
+                        "Groundskeeper:",
+                        JOptionPane.PLAIN_MESSAGE);
+            }
+            plantToAdd.setUse(false);
+        }
         killPlants(diedOfThirst, "a lack of water");
         killPlants(diedOfWater, "over-watering");
 
-        System.out.println(repaintTimer);
+        //System.out.println(repaintTimer);
         repaintTimer -= elapsedTime;
         if (repaintTimer <= 0) {
             repaint();
-            repaintTimer = (long) 10 * (drawing.getPlant().getLindenString().length());;
+            repaintTimer = (long) 100 * (long) (Math.sqrt((drawing.getPlant().getLindenString().length())));
+            //repaintTimer = 1000;
 
         }
     }
@@ -201,11 +227,20 @@ public class GameApp extends JFrame {
     private void killPlants(ArrayList<String> plants, String cause) {
         for (String p : plants) {
             try {
+                if (drawing.getPlant().getName().equals(p)) {
+                    drawing.getDrawer().setDead(true);
+                    repaint();
+                }
                 mainGarden.removePlant(p);
             } catch (NameNotInGardenException e) {
                 System.out.println("Plant Removal Error");
             }
-            System.out.println("\n" + p + " Has died from " + cause);
+            //System.out.println("\n" + p + " Has died from " + cause);
+            JFrame jframe = new JFrame();
+            JOptionPane.showMessageDialog(jframe,
+                    p + " Has died from " + cause,
+                    "Groundskeeper:",
+                    JOptionPane.PLAIN_MESSAGE);
         }
     }
 
@@ -375,6 +410,7 @@ public class GameApp extends JFrame {
             if (mainGarden.nameInGarden(plantToShow)) {
                 try {
                     drawing.setPlant(mainGarden.getListOfPlants().get(mainGarden.indexOfNameInGarden(plantToShow)));
+                    drawing.getDrawer().setDead(false);
                     repaint();
                 } catch (NameNotInGardenException error) {
                     System.out.println("NameNotInGardenException unexpected");
@@ -382,15 +418,18 @@ public class GameApp extends JFrame {
             }
         }
     }
+    // An ActionListener class for when the add plant button is pressed
 
     private class AddPlant implements ActionListener {
+
+        private GameApp gameApp;
+
+        public AddPlant(GameApp gameApp) {
+            this.gameApp = gameApp;
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
-            //JOptionPane.showMessageDialog(jframe,
-            //        "Eggs are not supposed to be green.",
-            //        "Gardener:",
-            //        JOptionPane.PLAIN_MESSAGE);
-            //Object[] possibilities = null;
             JFrame jframe = new JFrame();
 
             String plantName = (String) JOptionPane.showInputDialog(jframe,
@@ -400,7 +439,8 @@ public class GameApp extends JFrame {
                     null,
                     null,
                     null);
-
+            System.out.println(plantName);
+            System.out.println((plantName != null) && (plantName.length() > 0));
             if ((plantName != null) && (plantName.length() > 0)) {
                 String seed = (String) JOptionPane.showInputDialog(jframe,
                         "What seed would you like to use?:",
@@ -411,13 +451,7 @@ public class GameApp extends JFrame {
                         null);
                 if ((seed != null) && (seed.length() > 0)) {
                     try {
-                        mainGarden.addPlant(new Plant(plantName, seed));
-                    } catch (NameAlreadyInGardenException error) {
-                        JOptionPane.showMessageDialog(jframe,
-                                        "ERROR: There already exists a plant with that name. Try another one",
-                                        "Groundskeeper:",
-                                        JOptionPane.PLAIN_MESSAGE);
-                        //System.out.println("There already exists a plant with that name. Try another one");
+                         gameApp.plantToAdd = new Plant(plantName, seed);
                     } catch (InvalidSeedAlphabetException error) {
                         JOptionPane.showMessageDialog(jframe,
                                 "ERROR: Sorry, but this is not a valid seed. "
@@ -426,7 +460,6 @@ public class GameApp extends JFrame {
                                 "Groundskeeper:",
                                 JOptionPane.PLAIN_MESSAGE);
                     }
-
                 }
             }
         }

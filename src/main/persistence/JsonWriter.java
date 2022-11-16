@@ -27,7 +27,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of garden to file
     public void write(Garden g) {
         JSONObject json = g.toJson();
         saveToFile((json.toString(INDENT_FACTOR)));
