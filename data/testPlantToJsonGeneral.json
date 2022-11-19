@@ -4,6 +4,9 @@
     "linden string": "FFF",
     "progress to grow": 3,
     "name": "Rob",
-    "growth rate": 9
+    "growth rate": 9,
+    "breadth": 10.0,
+    "stem length": 10.0,
+    "max size": 30.0
   }
 ]}

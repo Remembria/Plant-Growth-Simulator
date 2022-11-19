@@ -53,11 +53,11 @@ public class JsonWriterTest extends JsonTest {
             try {
                 Garden garden = new Garden();
                 garden.addPlant(new Plant("Rebecca", "FF[F+F]F-F", 8, (float) 4,
-                        (float) -0.3));
+                        (float) -0.3, 20, 10, 50));
                 garden.addPlant(new Plant("John", "FF+", 3, (float) 1,
-                        (float) 9));
+                        (float) 9, 30, 5 ,70));
                 garden.addPlant(new Plant("Lily", "F+F+F+F+F+F", 10, (float) 0.1,
-                        (float) 3));
+                        (float) 3, 40, 40, 40));
                 JsonWriter writer = new JsonWriter("./data/testWriterGeneralGarden.json");
                 writer.open();
                 writer.write(garden);
@@ -67,11 +67,11 @@ public class JsonWriterTest extends JsonTest {
                 List<Plant> listOfPlants = garden.getListOfPlants();
                 assertEquals(3, listOfPlants.size());
                 checkPlant(listOfPlants.get(0), "Rebecca", "FF[F+F]F-F", 8, (float) 4,
-                        (float) -0.3);
+                        (float) -0.3, 20, 10, 50);
                 checkPlant(listOfPlants.get(1), "John", "FF+", 3, (float) 1,
-                        (float) 9);
+                        (float) 9, 30, 5, 70);
                 checkPlant(listOfPlants.get(2), "Lily", "F+F+F+F+F+F", 10, (float) 0.1,
-                        (float) 3);
+                        (float) 3, 40, 40, 40);
             } catch (NameAlreadyInGardenException e) {
                 System.out.println("Name cannot already be in garden");
             } catch (InvalidSeedAlphabetException e) {

@@ -52,10 +52,10 @@ public class JsonReaderTest extends JsonTest {
             List<Plant> listOfPlants = garden.getListOfPlants();
             assertEquals(2, listOfPlants.size());
             checkPlant(listOfPlants.get(0), "Lily", "FF-[-F+F+F]+[+F-F-F]",
-                    2, 2, (float) 4.2);
+                    2, 2, (float) 4.2, (float) 10.0, (float) 10.0, 30);
             checkPlant(listOfPlants.get(1), "Brentwood",
                     "FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]FF-[-F+F+F]+[+F-F-F]+",
-                    2, (float) 2, (float) 3.2);
+                    2, (float) 2, (float) 3.2, (float) 20.0, (float) 20.0, 30);
         } catch (IOException e) {
             fail("Couldn't read from file");
         } catch (InvalidSeedAlphabetException e) {

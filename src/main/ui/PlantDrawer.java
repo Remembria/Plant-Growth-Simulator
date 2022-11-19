@@ -13,70 +13,96 @@ import java.util.Random;
 public class PlantDrawer {
 
     private Boolean dead;
+    private int locX;
+    private int locY;
+    private double angle;
+    private float angleBreadth;
+    private float lineLength;
+    private int newLocX;
+    private int newLocY;
+    private List<String> codeList;
+    LinkedList<Integer> stackX;
+    LinkedList<Integer> stackY;
+    LinkedList<Double> stackTheta;
+    String code;
 
     public PlantDrawer() {}
 
     public void drawPlant(Plant plant, Graphics graphics, int startX, int startY) {
-        String code = plant.getLindenString();
         if (!dead) { //!plant.getLindenString().equals("") &&
-            graphics.drawString("Name: " + plant.getName(), 10, 15);
-            graphics.drawString("LindenString: " + plant.getLindenString(), 10, 35);
-            graphics.drawString("Progress to grow: " + plant.getProgressToGrow(), 10, 55);
-            graphics.drawString("Thirst: " + plant.getThirst(), 10, 75);
-            List<String> codeList = new ArrayList<String>(Arrays.asList(code.split("")));
-            //System.out.println(codeList);
-            LinkedList<Integer> stackX = new LinkedList<Integer>();
-            LinkedList<Integer> stackY = new LinkedList<Integer>();
-            LinkedList<Double> stackTheta = new LinkedList<Double>();
-
-            int locX = startX;
-            int locY = startY;
-            double angle = Math.PI / 2.0;
-            //int lineLength = 20;
-            //float lineLength = (float) (50 / (Math.max(1, Math.pow(codeList.size(), 1 / 2))));
-            float lineLength = (float) (50 / Math.pow(codeList.size(), 1 / 2));
-            //System.out.println(lineLength);
-
-            int newLocX;
-            int newLocY;
+            setupText(plant, graphics);
+            initializeFields(plant, startX, startY, code);
 
             Graphics2D g2 = (Graphics2D) graphics;
-            g2.setStroke(new BasicStroke(3));
+            g2.setStroke(new BasicStroke(1));
 
             for (String c : codeList) {
                 if (c.equals("F")) {
-                    //System.out.println("F");
-                    newLocX = (int) (locX - (Math.cos(angle) * lineLength * (Math.max(0.955, Math.random()))));
-                    newLocY = (int) (locY - (Math.sin(angle) * lineLength * (Math.max(0.955, Math.random()))));
-                    graphics.drawLine(locX, locY, newLocX, newLocY);
-                    locX = newLocX;
-                    locY = newLocY;
+                    forwardsDraw(graphics);
                 } else if (c.equals("+")) {
-                    angle -= (Math.PI / 10.0) * (Math.max(0.95, Math.random()));
+                    //angle -= angleBreadth * (Math.max(0.955555, Math.random()));
+                    angle -= angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))),
+                            4);
                 } else if (c.equals("-")) {
-                    angle += Math.PI / 10.0 * (Math.max(0.95, Math.random()));
+                    //angle += angleBreadth * (Math.max(0.955555, Math.random()));
+                    angle += angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))),
+                            4);
                 } else if (c.equals("[")) {
-                    stackX.add(locX);
-                    stackY.add(locY);
-                    stackTheta.add(angle);
+                    stackAdd(stackX, stackY, stackTheta);
                 } else { // ] case
-                    locX = stackX.getLast();
-                    locY = stackY.getLast();
-                    angle = stackTheta.getLast();
-                    stackX.removeLast();
-                    stackY.removeLast();
-                    stackTheta.removeLast();
+                    stackEnd(stackX, stackY, stackTheta);
                 }
-                //System.out.println("---");
-                //System.out.println(locX);
-                //System.out.println(locY);
-                //System.out.println(stackX);
-                //System.out.println(stackY);
-                //System.out.println("---");
             }
         } else {
             graphics.drawRect(0,0,800,500);
         }
+    }
+
+    private void initializeFields(Plant plant, int startX, int startY, String code) {
+        code = plant.getLindenString();
+        codeList = new ArrayList<String>(Arrays.asList(code.split("")));
+        stackX = new LinkedList<Integer>();
+        stackY = new LinkedList<Integer>();
+        stackTheta = new LinkedList<Double>();
+
+        locX = startX;
+        locY = startY;
+        angle = Math.PI / 2.0;
+        angleBreadth = plant.getBreadth();
+        lineLength = (float) (plant.getStemLength() * 1.1 / Math.pow(codeList.size(), 1.0 / 4));
+    }
+
+    private void stackEnd(LinkedList<Integer> stackX, LinkedList<Integer> stackY, LinkedList<Double> stackTheta) {
+        locX = stackX.getLast();
+        locY = stackY.getLast();
+        angle = stackTheta.getLast();
+        stackX.removeLast();
+        stackY.removeLast();
+        stackTheta.removeLast();
+    }
+
+    private void stackAdd(LinkedList<Integer> stackX, LinkedList<Integer> stackY, LinkedList<Double> stackTheta) {
+        stackX.add(locX);
+        stackY.add(locY);
+        stackTheta.add(angle);
+    }
+
+    private void forwardsDraw(Graphics graphics) {
+        newLocX = (int) (locX - Math.cos(angle) * lineLength);
+        newLocY = (int) (locY - Math.sin(angle) * lineLength);
+        graphics.drawLine(locX, locY, newLocX, newLocY);
+        locX = newLocX;
+        locY = newLocY;
+    }
+
+    private void setupText(Plant plant, Graphics graphics) {
+        graphics.drawString("Name: " + plant.getName(), 10, 15);
+        graphics.drawString("LindenString: " + plant.getLindenString(), 10, 35);
+        graphics.drawString("Progress to grow: " + plant.getProgressToGrow(), 10, 55);
+        graphics.drawString("Thirst: " + plant.getThirst(), 10, 75);
+        graphics.drawString("Stem Length: " + plant.getStemLength(), 10, 95);
+        graphics.drawString("Breadth: " + plant.getBreadth(), 10, 115);
+        graphics.drawString("Max Size: " + plant.getMaxSize(), 10, 135);
     }
 
     public void setDead(Boolean dead) {

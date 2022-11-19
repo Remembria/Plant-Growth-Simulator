@@ -20,6 +20,10 @@ public class Plant extends LindenmayerSystem implements Writable {
 
     private Boolean use;
 
+    private float breadth;
+    private float stemLength;
+    private int maxSize;
+
     // (Deprecated) REQUIRES: The alphabet of the axiom is valid (within the set {"F", "+", "-", "[", "]"})
     // EFFECTS: Generates a plant seed
     // Throws an InvalidSeedAlphabetException error if seed is invalid – so either alphabet {"F", "+", "-", "[", "]"}
@@ -33,12 +37,16 @@ public class Plant extends LindenmayerSystem implements Writable {
         growthRate = (int) Math.max(1, (Math.round(Math.random() * 10)));
         progressToGrow = growthRate;
         super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
+        this.breadth = (float) (Math.max((Math.PI / 10), Math.random() * (Math.PI / 3.0)));
+        this.stemLength = (float) Math.max(70, (Math.round(Math.random() * 200)));
+        this.maxSize = (int) Math.max(1000, (Math.round(Math.random() * 100000)));
 
         use = true;
     }
 
     // EFFECTS: Generates a plant seed with control over every parameter
-    public Plant(String name, String axiom, int growthRate, float progressToGrow, float thirst)
+    public Plant(String name, String axiom, int growthRate, float progressToGrow, float thirst, float breadth,
+                 float stemLength, int maxSize)
             throws InvalidSeedAlphabetException {
         if (!isValidSeed(axiom)) {
             throw new InvalidSeedAlphabetException();
@@ -48,6 +56,9 @@ public class Plant extends LindenmayerSystem implements Writable {
         this.growthRate = growthRate;
         this.progressToGrow = progressToGrow;
         this.thirst = thirst;
+        this.breadth = breadth;
+        this.stemLength = stemLength;
+        this.maxSize = maxSize;
         super.setPredecessorsAndSuccessors("F", "FF-[-F+F+F]+[+F-F-F]");
 
         use = true;
@@ -63,14 +74,14 @@ public class Plant extends LindenmayerSystem implements Writable {
             throw new GameSpeedZeroException();
         }
         setProgressToGrow(getProgressToGrow() - ((float) elapsedTime * gameSpeed));
-        System.out.println((float) elapsedTime * gameSpeed);
+        //System.out.println((float) elapsedTime * gameSpeed);
         if (getProgressToGrow() <= 0) {
             setProgressToGrow(growthRate);
-            if (thirst <= 5 && super.getLindenString().length() < 50000) { // Caps plant size
+            if (thirst <= 5 && super.getLindenString().length() < this.maxSize) { // Caps plant size
                 super.updateLindenSystem();
             }
         }
-        setThirst((float) (getThirst() + ((elapsedTime * gameSpeed) / 4)));
+        setThirst((float) (getThirst() + ((elapsedTime * gameSpeed) / 8)));
     }
 
 
@@ -124,6 +135,18 @@ public class Plant extends LindenmayerSystem implements Writable {
         return name;
     }
 
+    public float getBreadth() {
+        return this.breadth;
+    }
+
+    public float getStemLength() {
+        return this.stemLength;
+    }
+
+    public int getMaxSize() {
+        return this.maxSize;
+    }
+
     // EFFECTS: Returns true if the given seed is within the lindenSystem alphabet and bracket syntax is correct
     private Boolean isValidSeed(String seed) {
         int bracketsBalance = 0;
@@ -166,6 +189,9 @@ public class Plant extends LindenmayerSystem implements Writable {
         json.put("progress to grow", this.progressToGrow);
         json.put("name", this.name);
         json.put("linden string", super.lindenString);
+        json.put("breadth", this.breadth);
+        json.put("stem length", this.stemLength);
+        json.put("max size", this.maxSize);
         return json;
     }
 }

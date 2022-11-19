@@ -4,14 +4,20 @@
     "linden string": "FFF",
     "progress to grow": 3,
     "name": "Rob",
-    "growth rate": 9
+    "growth rate": 9,
+    "breadth": 10.0,
+    "stem length": 5.5,
+    "max size": 20
   },
   {
     "thirst": 4,
     "linden string": "F+F",
     "progress to grow": 2,
     "name": "Lily",
-    "growth rate": 2
+    "growth rate": 2,
+    "breadth": 15.0,
+    "stem length": 10.0,
+    "max size": 30
   }
 
 ]}

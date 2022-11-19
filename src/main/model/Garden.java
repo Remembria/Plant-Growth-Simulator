@@ -81,7 +81,7 @@ public class Garden implements Writable {
     }
 
     public ArrayList<Plant> getListOfPlants() {
-        return listOfPlants;
+        return this.listOfPlants;
     }
 
     // EFFECTS: Returns this garden in the form of a JSONObject

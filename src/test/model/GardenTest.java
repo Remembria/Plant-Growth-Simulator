@@ -282,8 +282,10 @@ class GardenTest {
     @Test
     public void testToJsonSingular() {
         try {
-            testGarden.addPlant(new Plant("Rob", "FFF", 9, (float) 3, (float) 5.5));
-            testGarden.addPlant(new Plant("Lily", "F+F", 2, (float) 2, (float) 4));
+            testGarden.addPlant(new Plant("Rob", "FFF", 9, (float) 3, (float) 5.5,
+                    10, 5, 5));
+            testGarden.addPlant(new Plant("Lily", "F+F", 2, (float) 2, (float) 4,
+                    5, 5, 10));
             StringBuilder contentBuilder = new StringBuilder();
 
             try (Stream<String> stream = Files.lines(Paths.get("./data/testGardenToJsonGeneral.json"),
@@ -306,6 +308,9 @@ class GardenTest {
                 assertEquals(plantOne.getInt("growth rate"), plantTwo.getInt("growth rate"));
                 assertEquals(plantOne.getFloat("progress to grow"), plantTwo.getFloat("progress to grow"));
                 assertEquals(plantOne.getFloat("thirst"), plantTwo.getFloat("thirst"));
+                assertEquals(plantOne.getFloat("breadth"), plantTwo.getFloat("breadth"));
+                assertEquals(plantOne.getFloat("stem length"), plantTwo.getFloat("stem length"));
+                assertEquals(plantOne.getInt("max size"), plantTwo.getInt("max size"));
             }
         } catch (IOException e) {
             fail("Couldn't read from file");

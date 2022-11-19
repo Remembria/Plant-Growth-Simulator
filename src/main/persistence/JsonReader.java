@@ -67,8 +67,11 @@ public class JsonReader {
         int growthRate = jsonObject.getInt("growth rate");
         Float progressToGrow = jsonObject.getFloat("progress to grow");
         Float thirst = jsonObject.getFloat("thirst");
+        Float breadth = jsonObject.getFloat("breadth");
+        Float stemLength = jsonObject.getFloat("stem length");
+        int maxSize = jsonObject.getInt("max size");
         //try {
-        Plant plant = new Plant(name, lindenString, growthRate, progressToGrow, thirst);
+        Plant plant = new Plant(name, lindenString, growthRate, progressToGrow, thirst, breadth, stemLength, maxSize);
         g.addPlant(plant);
         //} //catch (InvalidSeedAlphabetException e) {
         //    System.out.println("Invalid seed");

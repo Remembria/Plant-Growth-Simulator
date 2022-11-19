@@ -77,7 +77,8 @@ public class PlantTest {
     public void testPlantInvalidSeedAlphabetExceptionDetailed() {
         Plant plantTwo;
         try {
-            plantTwo = new Plant("Rebecca", "FF[F+F]F-F]", 8, (float) 4, (float) -0.3);
+            plantTwo = new Plant("Rebecca", "FF[F+F]F-F]", 8, (float) 4, (float) -0.3,
+                    (float) 20.0, (float) 20.0, 20);
             fail("No exception caught");
         } catch (InvalidSeedAlphabetException e) {
             //Perfect
@@ -182,11 +183,15 @@ public class PlantTest {
         }
         assertEquals(100, lindenString.length());
         try {
-            Plant plantTwo = new Plant("John", lindenString, 3, (float) 0, (float) 0);
+            Plant plantTwo = new Plant("John", lindenString, 3, (float) 0, (float) 0,
+                    (float) 20.0, (float) 20.0, 20);
             plantTwo.grow(1, 1);
             assertEquals(lindenString, plantTwo.getLindenString());
             assertEquals(1, plantTwo.getThirst());
             assertEquals(plantTwo.growthRate, plantTwo.getProgressToGrow());
+            assertEquals(20.0, plantTwo.getBreadth());
+            assertEquals(20.0, plantTwo.getStemLength());
+            assertEquals(20, plantTwo.getMaxSize());
         } catch (InvalidSeedAlphabetException e) {
             System.out.println("Invalid seed given");
         }
@@ -263,12 +268,18 @@ public class PlantTest {
                     plant.getString("linden string"),
                     plant.getInt("growth rate"),
                     plant.getFloat("progress to grow"),
-                    plant.getFloat("thirst")).toJson();
+                    plant.getFloat("thirst"),
+                    plant.getFloat("breadth"),
+                    plant.getFloat("stem length"),
+                    plant.getInt("max size")).toJson();
             assertEquals("Rob", plantTwo.getString("name"));
             assertEquals("FFF", plantTwo.getString("linden string"));
             assertEquals(9, plantTwo.getInt("growth rate"));
             assertEquals((float) 3, plantTwo.getFloat("progress to grow"));
             assertEquals((float) 5.5, plantTwo.getFloat("thirst"));
+            assertEquals((float) 10.0, plantTwo.getFloat("breadth"));
+            assertEquals((float) 5.5, plantTwo.getFloat("stem length"));
+            assertEquals((float) 20, plantTwo.getInt("max size"));
         } catch (IOException e) {
             fail("Couldn't read from file");
         } catch (InvalidSeedAlphabetException e) {

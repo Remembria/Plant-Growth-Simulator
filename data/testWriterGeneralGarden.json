@@ -4,20 +4,29 @@
         "linden string": "FF[F+F]F-F",
         "progress to grow": 4,
         "name": "Rebecca",
-        "growth rate": 8
+        "growth rate": 8,
+      "breadth": 15.0,
+      "stem length": 20.0,
+      "max size": 25.0
     },
     {
         "thirst": 9,
         "linden string": "FF+",
         "progress to grow": 1,
         "name": "John",
-        "growth rate": 3
+        "growth rate": 3,
+      "breadth": 10.0,
+      "stem length": 10.0,
+      "max size": 40.0
     },
     {
         "thirst": 3,
         "linden string": "F+F+F+F+F+F",
         "progress to grow": 0.1,
         "name": "Lily",
-        "growth rate": 10
+        "growth rate": 10,
+      "breadth": 10.0,
+      "stem length": 20.0,
+      "max size": 30.0
     }
 ]}
