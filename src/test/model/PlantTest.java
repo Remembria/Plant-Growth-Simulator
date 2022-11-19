@@ -38,6 +38,9 @@ public class PlantTest {
         assertEquals("Gerald", plant.getName());
         assertEquals("F", plant.getLindenString());
         assertEquals(0, plant.getThirst());
+        assertEquals(true, plant.getUse());
+        plant.setUse(false);
+        assertEquals(false, plant.getUse());
     }
 
     @Test
@@ -161,7 +164,7 @@ public class PlantTest {
         plant.setProgressToGrow(0);
         plant.grow(1, 1);
         assertEquals("F", plant.getLindenString());
-        assertEquals(7, plant.getThirst());
+        assertEquals(6.125, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
@@ -171,7 +174,7 @@ public class PlantTest {
         plant.setProgressToGrow(1);
         plant.grow(1, 1);
         assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
-        assertEquals(6, plant.getThirst());
+        assertEquals(5.125, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
@@ -187,7 +190,7 @@ public class PlantTest {
                     (float) 20.0, (float) 20.0, 20);
             plantTwo.grow(1, 1);
             assertEquals(lindenString, plantTwo.getLindenString());
-            assertEquals(1, plantTwo.getThirst());
+            assertEquals(0.125, plantTwo.getThirst());
             assertEquals(plantTwo.growthRate, plantTwo.getProgressToGrow());
             assertEquals(20.0, plantTwo.getBreadth());
             assertEquals(20.0, plantTwo.getStemLength());
@@ -203,7 +206,7 @@ public class PlantTest {
         plant.setProgressToGrow((float) 2.1);
         plant.grow(2, 1);
         assertEquals("F", plant.getLindenString());
-        assertEquals(2, plant.getThirst());
+        assertEquals(0.25, plant.getThirst());
         assertEquals(((float) 2.1) - ((float) 2 * 1), plant.getProgressToGrow());
     }
 
@@ -213,7 +216,7 @@ public class PlantTest {
         plant.setProgressToGrow((float) 6);
         plant.grow(2, 3);
         assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
-        assertEquals(9, plant.getThirst());
+        assertEquals(3.75, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
@@ -223,7 +226,7 @@ public class PlantTest {
         plant.setProgressToGrow(0);
         plant.grow(1, 1);
         assertEquals("FF-[-F+F+F]+[+F-F-F]", plant.getLindenString());
-        assertEquals(1, plant.getThirst());
+        assertEquals(0.125, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
         plant.setProgressToGrow(1);
         plant.grow(1, 1);
@@ -231,7 +234,7 @@ public class PlantTest {
                 "[-FF-[-F+F+F]+[+F-F-F]+FF-[-F+F+F]+[+F-F-F]+FF-" +
                 "[-F+F+F]+[+F-F-F]]+[+FF-[-F+F+F]+[+F-F-F]-FF-" +
                 "[-F+F+F]+[+F-F-F]-FF-[-F+F+F]+[+F-F-F]]", plant.getLindenString());
-        assertEquals(2, plant.getThirst());
+        assertEquals(0.25, plant.getThirst());
         assertEquals(plant.growthRate, plant.getProgressToGrow());
     }
 
@@ -278,8 +281,8 @@ public class PlantTest {
             assertEquals((float) 3, plantTwo.getFloat("progress to grow"));
             assertEquals((float) 5.5, plantTwo.getFloat("thirst"));
             assertEquals((float) 10.0, plantTwo.getFloat("breadth"));
-            assertEquals((float) 5.5, plantTwo.getFloat("stem length"));
-            assertEquals((float) 20, plantTwo.getInt("max size"));
+            assertEquals((float) 10.0, plantTwo.getFloat("stem length"));
+            assertEquals((float) 30.0, plantTwo.getInt("max size"));
         } catch (IOException e) {
             fail("Couldn't read from file");
         } catch (InvalidSeedAlphabetException e) {

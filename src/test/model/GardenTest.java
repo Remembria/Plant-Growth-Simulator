@@ -283,9 +283,9 @@ class GardenTest {
     public void testToJsonSingular() {
         try {
             testGarden.addPlant(new Plant("Rob", "FFF", 9, (float) 3, (float) 5.5,
-                    10, 5, 5));
+                    (float) 10, (float) 5.5, 20));
             testGarden.addPlant(new Plant("Lily", "F+F", 2, (float) 2, (float) 4,
-                    5, 5, 10));
+                    (float) 15, (float) 10.0, 30));
             StringBuilder contentBuilder = new StringBuilder();
 
             try (Stream<String> stream = Files.lines(Paths.get("./data/testGardenToJsonGeneral.json"),

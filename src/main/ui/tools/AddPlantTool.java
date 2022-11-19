@@ -1,8 +1,10 @@
-package ui;
+package ui.tools;
 
 import exceptions.InvalidSeedAlphabetException;
 import model.Garden;
 import model.Plant;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,8 +25,10 @@ public class AddPlantTool extends GameButton {
         this.drawing = gameApp.getDrawing();
     }
 
+    // A private ActionListener class to handle adding a plant when the given button is pressed
     private class AddPlant implements ActionListener {
 
+        // EFFECTS: Adds a plant to the mainGame
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame jframe = new JFrame();
@@ -42,6 +46,7 @@ public class AddPlantTool extends GameButton {
             }
         }
 
+        // EFFECTS: Directly responsible for the adding of the plant to the mainGame, handles all exceptions
         private void addPlant(String plantName, String seed, JFrame jframe) {
             try {
                 Plant plantToAdd = new Plant(plantName, seed);

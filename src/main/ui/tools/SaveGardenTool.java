@@ -1,7 +1,9 @@
-package ui;
+package ui.tools;
 
 import model.Garden;
 import persistence.JsonWriter;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,11 +27,13 @@ public class SaveGardenTool extends GameButton {
         this.jsonWriter = new JsonWriter(mainGame.JSON_STORE);
     }
 
+    // A private ActionListener class to handle saving the garden  when the given button is pressed
     private class SaveGarden implements ActionListener {
+
+        // EFFECTS: Responsible for saving the garden to a JSON directory
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame jframe = new JFrame();
-
             try {
                 jsonWriter.open();
                 jsonWriter.write(mainGarden);

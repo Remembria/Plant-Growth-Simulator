@@ -1,8 +1,10 @@
-package ui;
+package ui.tools;
 
 import exceptions.NameNotInGardenException;
 import model.Garden;
 import model.Plant;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,23 +19,26 @@ public class WaterPlantTool extends GameButton {
     private GameApp mainGame;
     private Garden mainGarden;
     private DrawingCanvas drawing;
+    private ArrayList<Plant> thirstyPlants;
 
     public WaterPlantTool(JPanel parent, GameApp gameApp) {
-        super("Water Plant", parent);
+        super("Water Thirsty Plants", parent);
         initializeButton(700, 40, new WaterPlant());
         this.mainGame = gameApp;
         this.mainGarden = gameApp.getMainGarden();
         this.drawing = gameApp.getDrawing();
+        thirstyPlants = new ArrayList<Plant>();
     }
 
+    // A private ActionListener class to handle watering a plant when the given button is pressed
     private class WaterPlant implements ActionListener {
 
+        // EFFECTS: Waters the selected plant a given number of times
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame jframe = new JFrame();
-
-            Stream<String> possF = mainGarden.getListOfPlants().stream().map(Plant::getName);
-
+            ArrayList<Plant> thirstyPlants = initThirstyPlants();
+            Stream<String> possF = thirstyPlants.stream().map(Plant::getName);
             String[] possibilities = possF.collect(Collectors.toList()).toArray(new String[0]);
 
             String nameToWater = (String) JOptionPane.showInputDialog(jframe,
@@ -56,5 +61,20 @@ public class WaterPlantTool extends GameButton {
                 }
             }
         }
+
+        // MODIFIES: this
+        // EFFECTS: Creates a list of the thirsty plants in the mainGarden
+        private ArrayList<Plant> initThirstyPlants() {
+            thirstyPlants.clear();
+            ArrayList<Plant> thirstyPlants = new ArrayList<Plant>();
+            for (Plant p : mainGarden.getListOfPlants()) {
+                if (p.getThirst() >= 1) {
+                    thirstyPlants.add(p);
+                }
+            }
+            return thirstyPlants;
+        }
+
+
     }
 }

@@ -1,11 +1,12 @@
-package ui;
+package ui.tools;
 
 import exceptions.NameNotInGardenException;
 import model.Garden;
 import model.Plant;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,7 +27,10 @@ public class ViewAllPlantsTool extends GameButton {
         this.drawing = gameApp.getDrawing();
     }
 
+    // A private ActionListener class to handle removing a plant from the garden when the given button is pressed
     private class ViewAllPlants implements ActionListener {
+
+        // EFFECTS: Shows a selected plant on the screen
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame jframe = new JFrame();

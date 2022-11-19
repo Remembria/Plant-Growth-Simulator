@@ -6,6 +6,7 @@ import model.Plant;
 import javax.swing.*;
 import java.awt.*;
 
+// Responsible for creating the Jpanel drawing canvas where the plants are drawn
 public class DrawingCanvas extends JPanel {
 
     private Plant plant;
@@ -24,6 +25,22 @@ public class DrawingCanvas extends JPanel {
         setBackground(Color.white);
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets the preferred size of the Jpanel
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(800,500);
+    }
+
+    // EFFECTS: Responsible for painting the plant by modifying the given graphics
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(new Color(0, 0, 0));
+        drawer.drawPlant(plant, g, getWidth() / 2, getHeight());
+
+    }
+
     public void setPlant(Plant plant) {
         this.plant = plant;
     }
@@ -34,21 +51,6 @@ public class DrawingCanvas extends JPanel {
 
     public PlantDrawer getDrawer() {
         return this.drawer;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(800,500);
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(new Color(0, 0, 0));
-        //g.drawString("Hello",40,40);
-        //g.drawLine(0, 0, 300, 300);
-        drawer.drawPlant(plant, g, getWidth() / 2, getHeight());
-
     }
 
 }

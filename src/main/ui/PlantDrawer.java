@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+// The Class directly responsible for drawing each plant
 public class PlantDrawer {
 
     private Boolean dead;
@@ -26,8 +27,7 @@ public class PlantDrawer {
     LinkedList<Double> stackTheta;
     String code;
 
-    public PlantDrawer() {}
-
+    // EFFECTS: Uses the drawLine function along with the plant LindenString to draw out the plant
     public void drawPlant(Plant plant, Graphics graphics, int startX, int startY) {
         if (!dead) { //!plant.getLindenString().equals("") &&
             setupText(plant, graphics);
@@ -58,6 +58,8 @@ public class PlantDrawer {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: Instantiates all class fields
     private void initializeFields(Plant plant, int startX, int startY, String code) {
         code = plant.getLindenString();
         codeList = new ArrayList<String>(Arrays.asList(code.split("")));
@@ -72,6 +74,8 @@ public class PlantDrawer {
         lineLength = (float) (plant.getStemLength() * 1.1 / Math.pow(codeList.size(), 1.0 / 4));
     }
 
+    // MODIFIES: this
+    // EFFECTS: Responsible for changing field values when the stack is drawn from
     private void stackEnd(LinkedList<Integer> stackX, LinkedList<Integer> stackY, LinkedList<Double> stackTheta) {
         locX = stackX.getLast();
         locY = stackY.getLast();
@@ -81,12 +85,15 @@ public class PlantDrawer {
         stackTheta.removeLast();
     }
 
+    // MODIFIES: this
+    // EFFECTS: Responsible for adding field values to the stack
     private void stackAdd(LinkedList<Integer> stackX, LinkedList<Integer> stackY, LinkedList<Double> stackTheta) {
         stackX.add(locX);
         stackY.add(locY);
         stackTheta.add(angle);
     }
 
+    // EFFECTS: Responsible for drawing a straight line in the direction of the curernt branch
     private void forwardsDraw(Graphics graphics) {
         newLocX = (int) (locX - Math.cos(angle) * lineLength);
         newLocY = (int) (locY - Math.sin(angle) * lineLength);
@@ -95,6 +102,7 @@ public class PlantDrawer {
         locY = newLocY;
     }
 
+    // EFFECTS: Draws all text information about the plant's stats on the top left corner of the JPanel
     private void setupText(Plant plant, Graphics graphics) {
         graphics.drawString("Name: " + plant.getName(), 10, 15);
         graphics.drawString("LindenString: " + plant.getLindenString(), 10, 35);

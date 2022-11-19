@@ -1,10 +1,12 @@
-package ui;
+package ui.tools;
 
 import exceptions.InvalidSeedAlphabetException;
 import exceptions.NameAlreadyInGardenException;
 import model.Garden;
 import model.Plant;
 import persistence.JsonReader;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -28,7 +30,10 @@ public class LoadGardenTool extends GameButton {
         jsonReader = new JsonReader(mainGame.JSON_STORE);
     }
 
+    // A private ActionListener class to handle loading the garden when the given button is pressed
     private class LoadGarden implements ActionListener {
+
+        // EFFECTS: Adds the JSON persistence garden file to the mainGarden
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame jframe = new JFrame();
@@ -57,6 +62,7 @@ public class LoadGardenTool extends GameButton {
             }
         }
 
+        // EFFECTS: Directly adds the plants to the mainGarden and sets the currently drawn plant to the added plant
         private void addPlants() throws IOException, InvalidSeedAlphabetException, NameAlreadyInGardenException {
             for (Plant p : jsonReader.read().getListOfPlants()) {
                 mainGame.setPlantsToAdd(p);
