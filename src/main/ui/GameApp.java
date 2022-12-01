@@ -97,37 +97,36 @@ public class GameApp extends JFrame {
     // EFFECTS: Processes user input and presents the tui
     private void runGame() {
         long startTime = System.nanoTime();
-        update(startTime);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Updates the status of every plant in the garden over time
-    private void update(long elapsedTimeNS) {
         while (true) {
-            double elapsedTime = (System.nanoTime() - elapsedTimeNS) / Math.pow(10, 13);
+            double elapsedTime = (System.nanoTime() - startTime) / Math.pow(10, 5);
+            startTime = System.nanoTime();
             repaintTimer -= elapsedTime;
             if (repaintTimer <= 0) {
+                repaintTimer = 50000;
                 ArrayList<String> diedOfThirst = new ArrayList<String>();
                 ArrayList<String> diedOfWater = new ArrayList<String>();
                 for (int i = 0; i < mainGarden.getListOfPlants().size(); i++) {
                     Plant p = mainGarden.getListOfPlants().get(i);
-                    p.grow(elapsedTime, (float) 0.5);
+                    p.grow(elapsedTime, (float) 10);
                     if (p.getThirst() >= 10) {
                         diedOfThirst.add(p.getName());
                     } else if (p.getThirst() < -1) {
                         diedOfWater.add(p.getName());
                     }
                 }
-                addPlants();
-                removePlants();
-                killPlants(diedOfThirst, "a lack of water");
-                killPlants(diedOfWater, "over-watering");
-
+                update(diedOfThirst, diedOfWater);
                 repaint();
-                //repaintTimer = (long) 100 * (long) (Math.sqrt((drawing.getPlant().getLindenString().length())));
-                repaintTimer = 10000;
             }
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Responsible for adding, removing, and killing plants
+    private void update(ArrayList<String> diedOfThirst, ArrayList<String> diedOfWater) {
+        addPlants();
+        removePlants();
+        killPlants(diedOfThirst, "a lack of water");
+        killPlants(diedOfWater, "over-watering");
     }
 
     // MODIFIES: this
