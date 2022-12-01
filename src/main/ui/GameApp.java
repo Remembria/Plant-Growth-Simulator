@@ -1,6 +1,8 @@
 package ui;
 
 import exceptions.*;
+import model.Event;
+import model.EventLog;
 import model.Garden;
 import model.Plant;
 import persistence.JsonReader;
@@ -9,8 +11,12 @@ import ui.tools.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 //The gardening game application
@@ -91,6 +97,23 @@ public class GameApp extends JFrame {
         add(jpanel, BorderLayout.SOUTH);
         setLayout(null);
         setVisible(true);
+        setWindowListener();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Adds a window listener that prints out the eventlog when the application is closed
+    private void setWindowListener() {
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Iterator<Event> iterator = EventLog.getInstance().iterator();
+                while (iterator.hasNext()) {
+                    System.out.println(iterator.next().getDescription());
+                }
+                System.exit(0);
+            }
+        });
     }
 
     // MODIFIES: this
@@ -179,7 +202,7 @@ public class GameApp extends JFrame {
                     drawing.getDrawer().setDead(true);
                     repaint();
                 }
-                mainGarden.removePlant(p);
+                mainGarden.removePlant(p, cause);
             } catch (NameNotInGardenException e) {
                 System.out.println("Plant Removal Error");
             }

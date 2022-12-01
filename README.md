@@ -46,6 +46,19 @@ dehydrated plants (they can die from overwatering though!)
 - **You can save the state of my application by** selecting the *Save Garden* button
 - **You can reload the state of my application by** electing the *Load Garden* button. Saved data will be overwritten.
 
+## Phase 4: Task 2
+
+Plant Jojo added to the garden
+
+Plant Lolo added to the garden
+
+Plant Jojo was watered 2 times
+
+Plant Jojo removed from the garden
+
+Plant Lolo died from a lack of water
+
+
 ### Citations:
 
 Seralization JSON methods modelled upon repository https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git

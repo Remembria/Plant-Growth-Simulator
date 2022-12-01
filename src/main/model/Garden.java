@@ -32,6 +32,7 @@ public class Garden implements Writable {
             throw new NameAlreadyInGardenException();
         }
         listOfPlants.add(plant);
+        EventLog.getInstance().logEvent(new Event("Plant " + plant.getName() + " was added to the garden"));
     }
 
     // MODIFIES: this
@@ -45,14 +46,29 @@ public class Garden implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: Removes the plant instance with name plantName from the listOfPlants
+    // EFFECTS: Removes the plant instance with name plantName from the listOfPlants and logs the event as removal
     // Throws a NameNotInGardenException if the given name to search for is not in the garden
     public void removePlant(String plantName) throws NameNotInGardenException {
+        removePlantDiscrete(plantName);
+        EventLog.getInstance().logEvent(new Event("Plant " + plantName + " was removed from the garden"));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Removes the plant instance with name plantName from the listOfPlants with an additional String reason
+    // Throws a NameNotInGardenException if the given name to search for is not in the garden
+    public void removePlant(String plantName, String reason) throws NameNotInGardenException {
+        removePlantDiscrete(plantName);
+        EventLog.getInstance().logEvent(new Event("Plant " + plantName + " died from " + reason));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Removes the plant instance with name plantName from the listOfPlants
+    // Throws a NameNotInGardenException if the given name to search for is not in the garden
+    private void removePlantDiscrete(String plantName) throws NameNotInGardenException {
         if (!nameInGarden(plantName)) {
             throw new NameNotInGardenException();
         }
         listOfPlants.remove(indexOfNameInGarden(plantName));
-
     }
 
     // MODIFIES: this
@@ -64,6 +80,7 @@ public class Garden implements Writable {
         }
         Plant plant = listOfPlants.get(indexOfNameInGarden(name));
         plant.water(amount);
+        EventLog.getInstance().logEvent(new Event("Plant " + name + " was watered " + amount + " times"));
     }
 
     // EFFECTS: Returns true if the given plant name is within the garden
