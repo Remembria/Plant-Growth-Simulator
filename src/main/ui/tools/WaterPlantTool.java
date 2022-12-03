@@ -21,6 +21,7 @@ public class WaterPlantTool extends GameButton implements ActionListener {
     //private DrawingCanvas drawing;
     private ArrayList<Plant> thirstyPlants;
 
+    // EFFECT: Initializes the water plant tool
     public WaterPlantTool(JPanel parent, GameApp gameApp) {
         super("Water Thirsty Plants", parent, gameApp);
         initializeButton(700, 40, this);

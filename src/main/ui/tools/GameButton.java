@@ -16,6 +16,7 @@ public class GameButton extends JButton {
     protected Garden mainGarden;
     protected DrawingCanvas drawing;
 
+    // EFFECT: Initializes the game button superclass with its parent gameApp
     public GameButton(String name, JPanel parent, GameApp gameApp) {
         super(name);
         parent.add(this);

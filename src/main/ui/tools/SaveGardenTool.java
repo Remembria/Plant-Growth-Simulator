@@ -18,6 +18,7 @@ public class SaveGardenTool extends GameButton implements ActionListener {
     //private DrawingCanvas drawing;
     private JsonWriter jsonWriter;
 
+    // EFFECT: Initializes the save garden tool
     public SaveGardenTool(JPanel parent, GameApp gameApp) {
         super("Save Garden", parent, gameApp);
         initializeButton(700, 40, this);

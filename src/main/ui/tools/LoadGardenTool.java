@@ -21,6 +21,7 @@ public class LoadGardenTool extends GameButton implements ActionListener {
    // private DrawingCanvas drawing;
     private JsonReader jsonReader;
 
+    // EFFECT: Initializes the load garden tool
     public LoadGardenTool(JPanel parent, GameApp gameApp) {
         super("Load Garden", parent, gameApp);
         initializeButton(700, 40, this);

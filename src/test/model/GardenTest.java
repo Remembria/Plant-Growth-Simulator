@@ -323,7 +323,7 @@ class GardenTest {
     }
 
     @Test
-    public void testAddPlantEventLogMultiple() {
+    public void testAddPlantRemovePlantEventLogMultiple() {
         ArrayList<Plant> listOfPlants = new ArrayList<Plant>();
         listOfPlants.add(plant);
         try {
@@ -350,6 +350,31 @@ class GardenTest {
         assertEquals("Plant Poppy was removed from the garden",
                 eventIterator.next().getDescription());
 
+        EventLog.getInstance().clear();
+    }
+
+    @Test
+    public void testAddPlantRemovePlantEventLogMultipleWithReasons() {
+        ArrayList<Plant> listOfPlants = new ArrayList<Plant>();
+        listOfPlants.add(plant);
+        try {
+            testGarden.addPlant(plant);
+            testGarden.removePlant("Poppy", "a lack of water");
+        } catch (NameAlreadyInGardenException e) {
+            fail("Name should not already be in garden");
+        } catch (NameNotInGardenException e) {
+            fail("Name should be in garden");
+        }
+
+        Iterator<Event> eventIterator = EventLog.getInstance().iterator();
+
+        assertEquals("Plant Poppy was added to the garden",
+                eventIterator.next().getDescription());
+
+        assertEquals("Plant Poppy died from a lack of water",
+                eventIterator.next().getDescription());
+
+        EventLog.getInstance().clear();
     }
 
 }

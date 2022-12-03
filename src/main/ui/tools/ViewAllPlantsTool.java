@@ -19,6 +19,7 @@ public class ViewAllPlantsTool extends GameButton implements ActionListener {
     //private Garden mainGarden;
     //private DrawingCanvas drawing;
 
+    // initializes the view all plants tool
     public ViewAllPlantsTool(JPanel parent, GameApp gameApp) {
         super("View All Plants", parent, gameApp);
         initializeButton(700, 40, this);

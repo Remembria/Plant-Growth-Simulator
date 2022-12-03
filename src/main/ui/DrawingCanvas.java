@@ -12,6 +12,8 @@ public class DrawingCanvas extends JPanel {
     private Plant plant;
     private PlantDrawer drawer = new PlantDrawer();
 
+
+    // EFFECTS: Produces the drawing canvas with a blank background
     public DrawingCanvas() {
         super();
         setBorder(BorderFactory.createLineBorder(Color.black));

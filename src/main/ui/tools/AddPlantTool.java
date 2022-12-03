@@ -17,6 +17,7 @@ public class AddPlantTool extends GameButton implements ActionListener {
     //private Garden mainGarden;
     //private DrawingCanvas drawing;
 
+    // EFFECT: Initializes the add plant tool
     public AddPlantTool(JPanel parent, GameApp gameApp) {
         super("Add Plant", parent, gameApp);
         initializeButton(700, 40, this);

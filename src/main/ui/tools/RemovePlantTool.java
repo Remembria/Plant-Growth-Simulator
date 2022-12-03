@@ -18,6 +18,7 @@ public class RemovePlantTool extends GameButton implements ActionListener {
     //private Garden mainGarden;
     //private DrawingCanvas drawing;
 
+    // EFFECT: Initializes the remove plant tool
     public RemovePlantTool(JPanel parent, GameApp gameApp) {
         super("Remove Plant", parent, gameApp);
         initializeButton(700, 40, this);
