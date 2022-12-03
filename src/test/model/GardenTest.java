@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -319,6 +320,36 @@ class GardenTest {
         } catch (NameAlreadyInGardenException e) {
             fail("Name is already in garden");
         }
+    }
+
+    @Test
+    public void testAddPlantEventLogMultiple() {
+        ArrayList<Plant> listOfPlants = new ArrayList<Plant>();
+        listOfPlants.add(plant);
+        try {
+            testGarden.addPlant(plant);
+        } catch (NameAlreadyInGardenException e) {
+            fail("Name should not already be in garden");
+        }
+        assertEquals(listOfPlants, testGarden.getListOfPlants());
+
+        assertEquals("Plant Poppy was added to the garden",
+                EventLog.getInstance().iterator().next().getDescription());
+
+        try {
+            testGarden.removePlant("Poppy");
+        } catch (NameNotInGardenException e) {
+            fail("Name should be in garden");
+        }
+
+        Iterator<Event> eventIterator = EventLog.getInstance().iterator();
+
+        assertEquals("Plant Poppy was added to the garden",
+                eventIterator.next().getDescription());
+
+        assertEquals("Plant Poppy was removed from the garden",
+                eventIterator.next().getDescription());
+
     }
 
 }
