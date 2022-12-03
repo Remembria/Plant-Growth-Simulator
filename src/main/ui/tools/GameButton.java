@@ -2,6 +2,8 @@ package ui.tools;
 
 import model.Garden;
 import model.Plant;
+import ui.DrawingCanvas;
+import ui.GameApp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +12,16 @@ import java.awt.event.ActionListener;
 // The most top-level class to describe game button behaviour
 public class GameButton extends JButton {
 
-    public GameButton(String name, JPanel parent) {
+    protected GameApp mainGame;
+    protected Garden mainGarden;
+    protected DrawingCanvas drawing;
+
+    public GameButton(String name, JPanel parent, GameApp gameApp) {
         super(name);
         parent.add(this);
+        this.mainGame = gameApp;
+        this.mainGarden = gameApp.getMainGarden();
+        this.drawing = gameApp.getDrawing();
     }
 
     // MODIFIES: this

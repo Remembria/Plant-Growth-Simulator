@@ -64,7 +64,6 @@ public class Plant extends LindenmayerSystem implements Writable {
         use = true;
     }
 
-    // (Deprecated) REQUIRES: gameSpeed != 0 (or else no growth will ever occur) (REMOVE)
     // MODIFIES: this
     // EFFECTS: Grows the plant given a certain elapsedTime has passed at a given rate
     // Throws an unchecked exception if gameSpeed is zero as the plants won't grow: but is unchecked as may be useful

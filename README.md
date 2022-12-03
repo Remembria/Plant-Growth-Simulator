@@ -58,6 +58,37 @@ Plant Jojo removed from the garden
 
 Plant Lolo died from a lack of water
 
+## Phase 4: Task 3
+
+This project has been somewhat of an eye-opening experience for me. I've always been of the jump first think later
+mentality – but seeing amount of avoidable coupling in my final result has definitely encouraged me to start
+pre-planning my programs in the future. The cohesion of my program was better than expected,
+however, with my focus in phase 3 on truncating the larger classes (e.g. GameApp) into its component tools and graphical
+components paying off in my ease of writing phase 4.
+
+Although I have made some recent changes to this program's design (i.e. removing duplication among the tools by flushing 
+out GameButton), there are still changes I would make given more time, listed below:
+
+- Changing the GameApp class tool fields to a singular list of GameButtons (their superclass) to lower individual 
+coupling
+
+
+- Currently, the entirety of the plant exists as a singular object. This makes it difficult, however, to add leaves /
+modify the plants functionality as need be. Representing the plant instead using the **composite pattern** with
+branches (composite), leaves, and offshoots (component) would improve this project's cohesion and make the Plant class
+easier to work with
+
+
+- Using a **singleton pattern** for the garden. There is only one garden (the mainGarden) in this project, and duplicate 
+items are not allowed inside it . Having the Garden control this selection (instead of GameApp) would both
+improve the cohesion of GameApp, and make reasoning about duplication more easily provable
+  - In doing so, the need for GameApp and all the tools to know about Plant could be removed – as the instantiation of 
+  new Plants would be handled directly through garden (using a new generatePlant() method). This would remove many
+  dependencies, clean up the UML diagram, and make altering the Plant class in the future much simpler.
+
+- Creating a new Garden Manager Class (Gardener) responsible for managing the time components of this project and
+updating the garden accordingly. Currently this is done in the GameApp, which handles both this and the Jpanels. 
+Creating this new class would improve overall project class cohesion.
 
 ### Citations:
 

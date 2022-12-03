@@ -22,10 +22,10 @@ public class PlantDrawer {
     private int newLocX;
     private int newLocY;
     private List<String> codeList;
-    LinkedList<Integer> stackX;
-    LinkedList<Integer> stackY;
-    LinkedList<Double> stackTheta;
-    String code;
+    private LinkedList<Integer> stackX;
+    private LinkedList<Integer> stackY;
+    private LinkedList<Double> stackTheta;
+    private String code;
 
     // EFFECTS: Uses the drawLine function along with the plant LindenString to draw out the plant
     public void drawPlant(Plant plant, Graphics graphics, int startX, int startY) {
