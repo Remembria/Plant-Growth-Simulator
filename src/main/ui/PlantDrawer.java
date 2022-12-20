@@ -32,7 +32,6 @@ public class PlantDrawer {
         if (!dead) { //!plant.getLindenString().equals("") &&
             setupText(plant, graphics);
             initializeFields(plant, startX, startY, code);
-
             Graphics2D g2 = (Graphics2D) graphics;
             g2.setStroke(new BasicStroke(1));
 
@@ -41,15 +40,14 @@ public class PlantDrawer {
                     forwardsDraw(graphics);
                 } else if (c.equals("+")) {
                     //angle -= angleBreadth * (Math.max(0.955555, Math.random()));
-                    angle -= angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))),
-                            4);
+                    angle -= angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))), 4);
                 } else if (c.equals("-")) {
                     //angle += angleBreadth * (Math.max(0.955555, Math.random()));
-                    angle += angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))),
-                            4);
+                    angle += angleBreadth + Math.pow(((0.5 * (Math.sin(System.nanoTime() / Math.pow(10, 9))))), 4);
                 } else if (c.equals("[")) {
                     stackAdd(stackX, stackY, stackTheta);
                 } else { // ] case
+                    drawLeaf(graphics);
                     stackEnd(stackX, stackY, stackTheta);
                 }
             }
@@ -111,6 +109,14 @@ public class PlantDrawer {
         graphics.drawString("Stem Length: " + plant.getStemLength(), 10, 95);
         graphics.drawString("Breadth: " + plant.getBreadth(), 10, 115);
         graphics.drawString("Max Size: " + plant.getMaxSize(), 10, 135);
+    }
+
+    public void drawLeaf(Graphics g) {
+        g.drawOval(locX - 3, locY - 3, 6, 6);
+        //int [] x = {0 + locX, 3 + locX, 5 + locX, 0 + locX, -5 + locX, -3 + locX};
+        //int [] y = {0 + locY, 2 + locY, 5 + locY, 15 + locY, 5 + locY, 2 + locY};
+        //g.drawPolygon(x, y, 6);
+        //g.fillPolygon(x, y, 6);
     }
 
     public void setDead(Boolean dead) {
