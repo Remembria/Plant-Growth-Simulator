@@ -30,22 +30,6 @@ understanding of mathematical **L-systems** through their application within a p
 - **As a user**, I want to load a prior garden state from a file and continue playing
 - **As a user**, I want plant growth to have an element of randomness
 
-# Instructions for Grader
-
-- **You can generate the first required event related to adding Xs to a Y by** selecting the *Add Plant* button.
-    - You can give the plant any name, but the seed is written with letters F, +, - only.
-    - Feel free to just put F for the seed (this is the simplest case)
-    - To get the panel where all the (alive) plants are displayed, select the *View All Plants* button
-- **You can generate the second required event related to adding Xs to a Y by** selecting the *Water Thirsty Plants*
-button. This will give you a thirsty subset of the list of plants, and offers you the chance to water your most 
-dehydrated plants (they can die from overwatering though!)
-- **You can locate my visual component by** selecting the *View Plants* button
-  and select the plant you've added. Depending on how quickly the plant grows (growthRate variable) you may see it
-  grow in real time! Watch out though, plants die over time, so if a plant you've added is missing, this is the likely
-  reason (dehydration).
-- **You can save the state of my application by** selecting the *Save Garden* button
-- **You can reload the state of my application by** electing the *Load Garden* button. Saved data will be overwritten.
-
 ## Phase 4: Task 2
 
 Plant Jojo added to the garden
